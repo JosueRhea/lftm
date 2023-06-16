@@ -18,18 +18,25 @@ export function Activities({ activities, userId }: Props) {
     useState<ActivityProps[]>(activities);
 
   useEffect(() => {
+    setLocalActivities(activities);
+  }, [activities]);
+
+  useEffect(() => {
     const channel = suscribeToActivityChanges(client, {
       userId,
       callback: (activity) => {
         const newActivity = activity.new;
         setLocalActivities((prev) => [...prev, newActivity]);
       },
+    }).subscribe(() => {
+      console.log("subscribed to channel");
     });
 
     return () => {
+      console.log("unsubscribing from channel");
       client.removeChannel(channel);
     };
-  }, []);
+  }, [client, userId, setLocalActivities]);
 
   return (
     <div className="w-full">

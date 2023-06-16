@@ -7,6 +7,8 @@ import { AlertCircle } from "lucide-react";
 import { StopCircle } from "lucide-react";
 import { cookies } from "next/headers";
 
+export const revalidate = 0
+
 export default async function Home() {
   const client = createServerComponentClient({ cookies });
   const {
@@ -15,6 +17,7 @@ export default async function Home() {
   const { data, error } = await getUserData(client, {
     userId: session?.user.id as string,
   });
+  console.log("getting data");
 
   const activities = data?.activity || [];
 

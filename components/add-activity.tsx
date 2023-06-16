@@ -17,6 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircle } from "lucide-react";
 import { createActivity } from "@/services/activity";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 
 export function AddActivity() {
   const [open, setOpen] = useState(false);
@@ -24,6 +25,7 @@ export function AddActivity() {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const client = createClientComponentClient();
+  const router = useRouter();
 
   const handleOnSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,13 +49,14 @@ export function AddActivity() {
       name,
       icon: selectedIcon!,
       userId: session?.user.id as string,
-    });    
+    });
     if (error) {
       setErrors([error.message]);
       return;
     }
 
     setOpen(false);
+    router.refresh();
   };
 
   return (

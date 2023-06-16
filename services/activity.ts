@@ -11,22 +11,16 @@ export function suscribeToActivityChanges(
     callback: (data: any) => void;
   }
 ) {
-
-  const channel = client
-    .channel("changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "activity",
-        filter: `user_id=eq.${userId}`,
-      },
-      callback
-    )
-    .subscribe(() => {
-      console.log("subscribed");
-    });
+  const channel = client.channel("changes").on(
+    "postgres_changes",
+    {
+      event: "INSERT",
+      schema: "public",
+      table: "activity",
+      filter: `user_id=eq.${userId}`,
+    },
+    callback
+  );
 
   return channel;
 }
