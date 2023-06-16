@@ -1,9 +1,8 @@
-"use client";
 import { ActivityProps } from "@/types/db";
 import { Activity } from "./activity";
-import { useEffect, useState } from "react";
-import { suscribeToActivityChanges } from "@/services/activity";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { useEffect, useState } from "react";
+// import { suscribeToActivityChanges } from "@/services/activity";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Terminal } from "lucide-react";
 
@@ -13,34 +12,34 @@ interface Props {
 }
 
 export function Activities({ activities, userId }: Props) {
-  const client = createClientComponentClient();
-  const [localActivities, setLocalActivities] =
-    useState<ActivityProps[]>(activities);
+  // const client = createClientComponentClient();
+  // const [localActivities, setLocalActivities] =
+  //   useState<ActivityProps[]>(activities);
 
-  useEffect(() => {
-    setLocalActivities(activities);
-  }, [activities]);
+  // useEffect(() => {
+  //   setLocalActivities(activities);
+  // }, [activities]);
 
-  useEffect(() => {
-    const channel = suscribeToActivityChanges(client, {
-      userId,
-      callback: (activity) => {
-        const newActivity = activity.new;
-        setLocalActivities((prev) => [...prev, newActivity]);
-      },
-    }).subscribe(() => {
-      console.log("subscribed to channel");
-    });
+  // useEffect(() => {
+  //   const channel = suscribeToActivityChanges(client, {
+  //     userId,
+  //     callback: (activity) => {
+  //       const newActivity = activity.new;
+  //       setLocalActivities((prev) => [...prev, newActivity]);
+  //     },
+  //   }).subscribe(() => {
+  //     console.log("subscribed to channel");
+  //   });
 
-    return () => {
-      console.log("unsubscribing from channel");
-      client.removeChannel(channel);
-    };
-  }, [client, userId, setLocalActivities]);
+  //   return () => {
+  //     console.log("unsubscribing from channel");
+  //     client.removeChannel(channel);
+  //   };
+  // }, [client, userId, setLocalActivities]);
 
   return (
     <div className="w-full">
-      {localActivities.length <= 0 && (
+      {activities.length <= 0 && (
         <Alert className="mt-4">
           <Terminal className="h-4 w-4" />
           <AlertTitle>Heads up!</AlertTitle>
@@ -50,7 +49,7 @@ export function Activities({ activities, userId }: Props) {
         </Alert>
       )}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
-        {localActivities.map((activity) => (
+        {activities.map((activity) => (
           <Activity key={activity.id} data={activity} />
         ))}
         <Activity isPlus={true} />

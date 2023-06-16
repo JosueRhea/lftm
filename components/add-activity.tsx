@@ -1,5 +1,5 @@
 "use client";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { ActivitiesIcons } from "./activities-icons";
 import { Button } from "./ui/button";
 import {
@@ -18,12 +18,14 @@ import { AlertCircle } from "lucide-react";
 import { createActivity } from "@/services/activity";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 
 export function AddActivity() {
   const [open, setOpen] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const client = createClientComponentClient();
   const router = useRouter();
 
@@ -41,6 +43,7 @@ export function AddActivity() {
       return;
     }
 
+    setIsLoading(true);
     const {
       data: { session },
     } = await client.auth.getSession();
@@ -50,6 +53,7 @@ export function AddActivity() {
       icon: selectedIcon!,
       userId: session?.user.id as string,
     });
+    setIsLoading(false);
     if (error) {
       setErrors([error.message]);
       return;
@@ -106,7 +110,8 @@ export function AddActivity() {
             </Alert>
           )}
           <DialogFooter className="mt-2">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save
             </Button>
           </DialogFooter>
