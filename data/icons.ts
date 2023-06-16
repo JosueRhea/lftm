@@ -48,3 +48,17 @@ export const icons = [
     icon: Gamepad2,
   },
 ];
+
+export const iconsKV: {
+  [key: string]: any;
+} = {
+  Bike: Bike,
+  Work: Briefcase,
+  Sleep: Moon,
+  Gym: Dumbbell,
+  Travel: Navigation2,
+  Study: BookCopy,
+  Tv: Tv,
+  Keyboard: Keyboard,
+  Games: Gamepad2,
+};

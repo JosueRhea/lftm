@@ -27,6 +27,7 @@ export function ActivitiesIcons({ onChange }: Props) {
           <button
             value={icon.name}
             key={icon.name}
+            type="button"
             onClick={() => handleOnClick(icon.name)}
             className={`border-2 aspect-square ${
               isSelected ? "border-primary" : "border-transparent"

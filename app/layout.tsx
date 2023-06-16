@@ -26,11 +26,14 @@ export default async function RootLayout({
 
   const shouldShowLogin = session == null;
 
+  const username = session?.user.user_metadata.name;
+  const avatar = session?.user.user_metadata.avatar_url;
+
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-col items-center px-4`}>
         <main className="w-full max-w-4xl">
-          <Header />
+          <Header avatar={avatar} username={username} />
           <Nav />
           {shouldShowLogin ? <Login /> : children}
         </main>

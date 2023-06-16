@@ -1,32 +1,29 @@
-import { Moon, Plus } from "lucide-react";
 import { Button } from "./ui/button";
-import { Dialog, DialogTrigger } from "./ui/dialog";
 import { AddActivity } from "./add-activity";
+import { ActivityProps } from "@/types/db";
+import { iconsKV } from "@/data/icons";
 
 type Props = {
   isPlus?: boolean;
   isActive?: boolean;
   disabled?: boolean;
+  data?: ActivityProps;
 };
 
 export function Activity({
   isPlus = false,
   isActive = false,
   disabled = false,
+  data,
 }: Props) {
   if (isPlus) {
-    return (
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Add
-          </Button>
-        </DialogTrigger>
-        <AddActivity />
-      </Dialog>
-    );
+    return <AddActivity />;
   }
+
+  const name = data?.name;
+  const icon = data?.icon as string;
+
+  const IconComp = iconsKV[icon];
 
   return (
     <Button
@@ -34,12 +31,12 @@ export function Activity({
       variant={"outline"}
       disabled={disabled}
     >
-      <Moon
+      <IconComp
         className={`w-4 h-4 mr-2 ${
           isActive ? "animate-bounce" : "animate-none"
         }`}
       />
-      Sleep
+      {name}
     </Button>
   );
 }
