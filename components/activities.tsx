@@ -1,48 +1,28 @@
 "use client";
-import { ActivityProps, RecordWithRelationsProps } from "@/types/db";
+import { ActivityProps } from "@/types/db";
 import { Activity } from "./activity";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Terminal } from "lucide-react";
+import { useCurrentActivity } from "@/hooks/use-current-activity";
+import { Skeleton } from "./ui/skeleton";
+import { useEffect } from "react";
+import { suscribeToCurrentUserData } from "@/services/activity";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useEffect, useState } from "react";
-import {
-  getCurrentActivity,
-  suscribeToCurrentUserData,
-} from "@/services/activity";
 
 interface Props {
   activities: ActivityProps[];
   userId: string;
-  currentActivityServer?: RecordWithRelationsProps | null;
 }
 
-export function Activities({
-  activities,
-  userId,
-  currentActivityServer,
-}: Props) {
+export function Activities({ activities, userId }: Props) {
   const client = createClientComponentClient();
-  const [currentActivity, setCurrentActivity] = useState(currentActivityServer);
-
-  // useEffect(() => {
-  //   setLocalActivities(activities);
-  // }, [activities]);
-
+  const { data, error, invalidate, isLoading, isRefetching } =
+    useCurrentActivity({ userId });
   useEffect(() => {
     const channel = suscribeToCurrentUserData(client, {
       userId,
-      callback: async (data) => {
-        const newUserActivity = data?.new?.current_activity;
-        if (newUserActivity) {
-          const { data } = await getCurrentActivity(client, {
-            activityId: newUserActivity,
-          });
-          if (data) {
-            setCurrentActivity(data as RecordWithRelationsProps);
-          }
-        } else {
-          setCurrentActivity(null);
-        }
+      callback: async () => {
+        invalidate();
       },
       tag: "activities-subscription",
     }).subscribe(() => {});
@@ -51,6 +31,19 @@ export function Activities({
       channel.unsubscribe();
     };
   }, []);
+
+  if (isLoading && !data) {
+    return (
+      <div className="mt-4">
+        <Skeleton className="h-8 w-44 rounded-md" />
+        <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full rounded-md" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -63,8 +56,16 @@ export function Activities({
           </AlertDescription>
         </Alert>
       )}
+      {error != null && (
+        <Alert variant="destructive" className="mt-4">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Something went wrong</AlertDescription>
+        </Alert>
+      )}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
         {activities.map((activity) => {
+          const currentActivity = data?.data;
           const isActive =
             currentActivity != null &&
             activity.id == currentActivity.activity_id;

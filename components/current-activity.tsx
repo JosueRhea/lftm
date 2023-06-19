@@ -1,68 +1,75 @@
 "use client";
 import { StopCircle } from "lucide-react";
 import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
-import { RecordWithRelationsProps } from "@/types/db";
+import { useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   getCurrentActivity,
   stopRecord,
   suscribeToCurrentUserData,
 } from "@/services/activity";
+import { useCurrentActivity } from "@/hooks/use-current-activity";
+import { Skeleton } from "./ui/skeleton";
 
 interface Props {
-  currentActivity?: RecordWithRelationsProps | null;
   userId: string;
 }
 
-export function CurrentActivity({ currentActivity, userId }: Props) {
-  const [localActivity, setLocalActivity] = useState(currentActivity);
+export function CurrentActivity({ userId }: Props) {
   const client = createClientComponentClient();
+  const {
+    data: res,
+    error,
+    isLoading,
+    invalidate,
+    isRefetching,
+  } = useCurrentActivity({ userId });
 
   useEffect(() => {
     const channel = suscribeToCurrentUserData(client, {
       userId,
-      callback: async (data) => {
-        const newUserActivity = data?.new?.current_activity;
-        if (newUserActivity) {
-          const { data } = await getCurrentActivity(client, {
-            activityId: newUserActivity,
-          });
-
-          if (data) {
-            setLocalActivity(data as RecordWithRelationsProps);
-          }
-        }
+      callback: async () => {
+        invalidate();
       },
       tag: "current-activity-subscription",
     }).subscribe(() => {});
-
     return () => {
       channel.unsubscribe();
     };
   }, []);
 
   const handleOnStop = async () => {
-    if (!localActivity) return;
+    if (!res?.data?.activity_id) return;
     const { error } = await stopRecord(client, {
       userId,
-      currentRecordId: localActivity.id,
+      currentRecordId: res.data?.activity_id,
     });
 
     if (error) {
       console.error(error);
       return;
     }
-
-    setLocalActivity(null);
+    invalidate();
   };
+
+  if ((isLoading && !res) || isRefetching) {
+    return (
+      <div className="w-full flex flex-col items-center">
+        <Skeleton className="h-10 w-64 rounded-md" />
+        <Skeleton className="h-6 mt-2 w-52 rounded-md" />
+        <div className="flex gap-x-2 mt-2">
+          <Skeleton className="h-10 w-64 rounded-md" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col items-center">
       <p className="text-4xl">0: 00: 00</p>
-      {localActivity ? (
+      {res && !error ? (
         <>
-          <p className="text-xl">{localActivity.activity.name}</p>
+          <p className="text-xl">{res.data?.activity?.name}</p>
           <div className="flex gap-x-2 mt-2">
             <Button onClick={handleOnStop}>
               <StopCircle className="w-4 h-4 mr-2" />

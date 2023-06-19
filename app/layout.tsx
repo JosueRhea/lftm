@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { Login } from "@/components/login";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import Providers from "@/lib/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,9 +34,11 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${inter.className} flex flex-col items-center px-4`}>
         <main className="w-full max-w-4xl">
-          <Header avatar={avatar} username={username} />
-          <Nav />
-          {shouldShowLogin ? <Login /> : children}
+          <Providers>
+            <Header avatar={avatar} username={username} />
+            <Nav />
+            {shouldShowLogin ? <Login /> : children}
+          </Providers>
         </main>
       </body>
     </html>

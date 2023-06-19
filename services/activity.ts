@@ -36,13 +36,23 @@ export async function createActivity(
 
 export async function getCurrentActivity(
   client: SupabaseClient<Database>,
-  { activityId }: { activityId: string }
+  { userId }: { userId: string }
 ) {
+  const { data } = await client
+    .from("profiles")
+    .select("current_activity")
+    .eq("id", userId)
+    .single()
+    .throwOnError();
+
+  if (data?.current_activity == null) return null;
+
   return await client
     .from("record")
     .select("*, activity(*)")
-    .eq("id", activityId)
-    .single();
+    .eq("id", data?.current_activity)
+    .single()
+    .throwOnError();
 }
 
 export function suscribeToCurrentUserData(
@@ -50,11 +60,11 @@ export function suscribeToCurrentUserData(
   {
     userId,
     callback,
-    tag
+    tag,
   }: {
     userId: string;
     callback: (data: any) => void;
-    tag: string
+    tag: string;
   }
 ) {
   const channel = client.channel(tag).on(
