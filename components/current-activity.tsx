@@ -38,11 +38,13 @@ export function CurrentActivity({ userId }: Props) {
     };
   }, []);
 
+  // console.log(first)
+
   const handleOnStop = async () => {
-    if (!res?.data?.activity_id) return;
+    if (!res?.data?.id) return;
     const { error } = await stopRecord(client, {
       userId,
-      currentRecordId: res.data?.activity_id,
+      currentRecordId: res.data?.id,
     });
 
     if (error) {

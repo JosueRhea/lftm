@@ -121,6 +121,8 @@ export async function stopRecord(
     })
     .eq("id", currentRecordId);
 
+  console.log(recordData);
+
   if (recordData.error) return recordData;
   return await client
     .from("profiles")
