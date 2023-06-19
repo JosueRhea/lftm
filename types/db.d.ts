@@ -44,18 +44,21 @@ export interface Database {
         Row: {
           avatar_url: string | null;
           created_at: string | null;
+          current_activity: string | null;
           id: string;
           username: string | null;
         };
         Insert: {
           avatar_url?: string | null;
           created_at?: string | null;
+          current_activity?: string | null;
           id: string;
           username?: string | null;
         };
         Update: {
           avatar_url?: string | null;
           created_at?: string | null;
+          current_activity?: string | null;
           id?: string;
           username?: string | null;
         };
@@ -64,6 +67,43 @@ export interface Database {
             foreignKeyName: "profiles_id_fkey";
             columns: ["id"];
             referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      record: {
+        Row: {
+          activity_id: string | null;
+          created_at: string | null;
+          end_date: string | null;
+          id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          activity_id?: string | null;
+          created_at?: string | null;
+          end_date?: string | null;
+          id?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          activity_id?: string | null;
+          created_at?: string | null;
+          end_date?: string | null;
+          id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "record_activity_id_fkey";
+            columns: ["activity_id"];
+            referencedRelation: "activity";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "record_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "profiles";
             referencedColumns: ["id"];
           }
         ];
@@ -85,3 +125,7 @@ export interface Database {
 }
 
 export type ActivityProps = Database["public"]["Tables"]["activity"]["Row"];
+export type RecordProps = Database["public"]["Tables"]["record"]["Row"];
+export type RecordWithRelationsProps = RecordProps & {
+  activity: ActivityProps;
+};

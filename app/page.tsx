@@ -1,10 +1,11 @@
 import { Activities } from "@/components/activities";
+import { CurrentActivity } from "@/components/current-activity";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { getCurrentActivity } from "@/services/activity";
 import { getUserData } from "@/services/user";
+import { RecordWithRelationsProps } from "@/types/db";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AlertCircle } from "lucide-react";
-import { StopCircle } from "lucide-react";
 import { cookies } from "next/headers";
 
 export default async function Home() {
@@ -19,19 +20,21 @@ export default async function Home() {
   const activities = data?.activity || [];
 
   const userId = session?.user.id as string;
+  const currentActivityId = data?.current_activity;
+  let currentActivity = null;
+  if (currentActivityId) {
+    const { data } = await getCurrentActivity(client, {
+      activityId: currentActivityId,
+    });
+    if (data) currentActivity = data;
+  }
 
   return (
     <div className="mt-12">
-      <div className="w-full flex flex-col items-center">
-        <p className="text-4xl">0: 00: 00</p>
-        <p className="text-xl">Sleep</p>
-        <div className="flex gap-x-2 mt-2">
-          <Button>
-            <StopCircle className="w-4 h-4 mr-2" />
-            Stop
-          </Button>
-        </div>
-      </div>
+      <CurrentActivity
+        currentActivity={currentActivity as RecordWithRelationsProps}
+        userId={userId}
+      />
       <div className="mt-4">
         <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
           Activities
@@ -43,7 +46,11 @@ export default async function Home() {
             <AlertDescription>{error.message}</AlertDescription>
           </Alert>
         )}
-        <Activities activities={activities} userId={userId} />
+        <Activities
+          currentActivityServer={currentActivity as RecordWithRelationsProps}
+          activities={activities}
+          userId={userId}
+        />
       </div>
     </div>
   );

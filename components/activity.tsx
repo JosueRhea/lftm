@@ -1,7 +1,10 @@
+"use client";
 import { Button } from "./ui/button";
 import { AddActivity } from "./add-activity";
 import { ActivityProps } from "@/types/db";
 import { iconsKV } from "@/data/icons";
+import { createRecord } from "@/services/activity";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 type Props = {
   isPlus?: boolean;
@@ -19,16 +22,35 @@ export function Activity({
   if (isPlus) {
     return <AddActivity />;
   }
+  const client = createClientComponentClient();
 
   const name = data?.name;
   const icon = data?.icon as string;
 
   const IconComp = iconsKV[icon];
 
+  const handleOnClick = async () => {
+    const {
+      data: { session },
+    } = await client.auth.getSession();
+
+    if (!session) return;
+
+    const { error } = await createRecord(client, {
+      activityId: data?.id as string,
+      userId: session.user.id,
+    });
+
+    if (!error) {
+      console.log("record created");
+    }
+  };
+
   return (
     <Button
       className={`w-full ${isActive ? "border-primary" : ""}`}
       variant={"outline"}
+      onClick={disabled ? undefined : handleOnClick}
       disabled={disabled}
     >
       <IconComp
