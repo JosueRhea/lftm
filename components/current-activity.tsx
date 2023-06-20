@@ -3,13 +3,10 @@ import { StopCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import {
-  getCurrentActivity,
-  stopRecord,
-  suscribeToCurrentUserData,
-} from "@/services/activity";
+import { stopRecord, suscribeToCurrentUserData } from "@/services/activity";
 import { useCurrentActivity } from "@/hooks/use-current-activity";
 import { Skeleton } from "./ui/skeleton";
+import { Counter } from "./counter";
 
 interface Props {
   userId: string;
@@ -37,8 +34,6 @@ export function CurrentActivity({ userId }: Props) {
       channel.unsubscribe();
     };
   }, []);
-
-  // console.log(first)
 
   const handleOnStop = async () => {
     if (!res?.data?.id) return;
@@ -68,9 +63,9 @@ export function CurrentActivity({ userId }: Props) {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <p className="text-4xl">0: 00: 00</p>
       {res && !error ? (
         <>
+          <Counter startDate={new Date(res.data?.created_at as string)} />
           <p className="text-xl">{res.data?.activity?.name}</p>
           <div className="flex gap-x-2 mt-2">
             <Button onClick={handleOnStop}>
@@ -80,9 +75,12 @@ export function CurrentActivity({ userId }: Props) {
           </div>
         </>
       ) : (
-        <p className="mt-4">
-          No activity yet. <strong>Start one!</strong>
-        </p>
+        <>
+          <p className="text-4xl">0: 00: 00</p>
+          <p className="mt-4">
+            No activity yet. <strong>Start one!</strong>
+          </p>
+        </>
       )}
     </div>
   );
