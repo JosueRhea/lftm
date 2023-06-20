@@ -131,3 +131,15 @@ export async function stopRecord(
     })
     .eq("id", userId);
 }
+
+export async function get24hRecords(
+  client: SupabaseClient<Database>,
+  { userId }: { userId: string }
+) {
+  return await client
+    .from("record")
+    .select(`*, activity(*)`)
+    .eq("user_id", userId)
+    .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+    .order("created_at", { ascending: false });
+}
