@@ -129,3 +129,6 @@ export type RecordProps = Database["public"]["Tables"]["record"]["Row"];
 export type RecordWithRelationsProps = RecordProps & {
   activity: ActivityProps;
 };
+export type RecordWithCounterProps = RecordWithRelationsProps & {
+  counter: number;
+};

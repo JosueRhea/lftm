@@ -1,4 +1,8 @@
-import { Database } from "@/types/db";
+import {
+  Database,
+  RecordWithCounterProps,
+  RecordWithRelationsProps,
+} from "@/types/db";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export function suscribeToActivityChanges(
@@ -136,10 +140,90 @@ export async function get24hRecords(
   client: SupabaseClient<Database>,
   { userId }: { userId: string }
 ) {
-  return await client
+  const res = await client
     .from("record")
     .select(`*, activity(*)`)
     .eq("user_id", userId)
     .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .throwOnError();
+
+  const data = res.data;
+
+  if (data == null) return null;
+
+  const currentDate = new Date(); // Get the current date and time
+  currentDate.setHours(0, 0, 0, 0); // Set the current time to the start of the day
+
+  const datesArray = [];
+
+  for (let i = 0; i < 24; i++) {
+    const hourDate = new Date(currentDate.getTime() + i * 60 * 60 * 1000); // Add the current iteration hour to the date
+    datesArray.push(hourDate);
+  }
+  const hours = datesArray.map((date) => {
+    const record = data.find(
+      (record) =>
+        new Date(record.created_at as string).getHours() === date.getHours() &&
+        new Date(record.created_at as string).getDate() === date.getDate()
+    );
+
+    return {
+      date: date.toISOString(),
+      record: record ?? null,
+    };
+  });
+
+  const findedRecords: RecordWithCounterProps[] = [];
+  let totalTrackedHours = 0;
+  hours.forEach((hour) => {
+    if (hour.record == null) {
+      return;
+    }
+
+    const findedRecord = findedRecords.find(
+      (n) => n.activity.id === hour.record?.activity_id
+    );
+
+    const record = hour.record as RecordWithRelationsProps;
+    const startDate = new Date(record.created_at as string).getTime();
+    const endDate =
+      record.end_date != null
+        ? new Date(record.end_date as string).getTime()
+        : new Date().getTime();
+
+    // i wanna convert the diff to a hours like 1.2 or whatever
+    const diff = (endDate - startDate) / (1000 * 60 * 60);
+    if (findedRecord == null) {
+      findedRecords.push({
+        ...record,
+        counter: diff,
+      });
+    } else {
+      findedRecord.counter += diff;
+    }
+    totalTrackedHours += diff;
+  });
+
+  const untrackedHours = 24 - totalTrackedHours;
+
+  if (untrackedHours > 0) {
+    findedRecords.push({
+      activity: {
+        created_at: "untracked",
+        icon: "untracked",
+        id: "untracked",
+        name: "untracked",
+        user_id: "untracked",
+      },
+      activity_id: "untracked",
+      counter: untrackedHours,
+      created_at: "untracked",
+      end_date: "untracked",
+      id: "untracked",
+      user_id: "untracked",
+    });
+  }
+
+  return findedRecords;
 }
