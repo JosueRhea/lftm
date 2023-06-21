@@ -37,7 +37,7 @@ export function MostTrackedActivities({
           <div className="w-full flex flex-col h-52 items-center justify-center text-center">
             <p>Start tracking your activities to see them here.</p>
             <Button className="mt-2" onClick={() => replace("/")}>
-              Let's get started
+              Let&apos;s get started
             </Button>
           </div>
         )}
