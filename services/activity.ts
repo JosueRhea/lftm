@@ -140,62 +140,51 @@ export async function get24hRecords(
   client: SupabaseClient<Database>,
   { userId }: { userId: string }
 ) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const res = await client
     .from("record")
     .select(`*, activity(*)`)
     .eq("user_id", userId)
-    .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+    // .gte("created_at", today.toISOString())
+    .or(
+      `end_date.gte.${today.toISOString()},created_at.gte.${today.toISOString()}`
+    )
     .order("created_at", { ascending: false })
     .throwOnError();
 
-  const data = res.data;
+  const data = res.data as RecordWithRelationsProps[];
+
+  // console.log(res.data);
 
   const findedRecords: RecordWithCounterProps[] = [];
 
   if (data == null || data.length <= 0)
     return { records: findedRecords, totalCount: 0 };
 
-  const currentDate = new Date(); // Get the current date and time
-  currentDate.setHours(0, 0, 0, 0); // Set the current time to the start of the day
-
-  const datesArray = [];
-
-  for (let i = 0; i < 24; i++) {
-    const hourDate = new Date(currentDate.getTime() + i * 60 * 60 * 1000); // Add the current iteration hour to the date
-    datesArray.push(hourDate);
-  }
-  const hours = datesArray.map((date) => {
-    const record = data.find(
-      (record) =>
-        new Date(record.created_at as string).getHours() === date.getHours() &&
-        new Date(record.created_at as string).getDate() === date.getDate()
-    );
-
-    return {
-      date: date.toISOString(),
-      record: record ?? null,
-    };
-  });
-
   let totalTrackedHours = 0;
-  hours.forEach((hour) => {
-    if (hour.record == null) {
+  data.forEach((record) => {
+    if (record == null) {
       return;
     }
 
     const findedRecord = findedRecords.find(
-      (n) => n.activity.id === hour.record?.activity_id
+      (n) => n.activity.id === record?.activity_id
     );
 
-    const record = hour.record as RecordWithRelationsProps;
-    const startDate = new Date(record.created_at as string).getTime();
+    // const record = hour.record as RecordWithRelationsProps;
+    const startDate = new Date(record.created_at as string);
+    if (startDate.getDate() !== today.getDate()) {
+      startDate.setTime(today.getTime());
+    }
+
     const endDate =
       record.end_date != null
-        ? new Date(record.end_date as string).getTime()
-        : new Date().getTime();
+        ? new Date(record.end_date as string)
+        : new Date();
 
     // i wanna convert the diff to a hours like 1.2 or whatever
-    const diff = (endDate - startDate) / (1000 * 60 * 60);
+    const diff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
     if (findedRecord == null) {
       findedRecords.push({
         ...record,
