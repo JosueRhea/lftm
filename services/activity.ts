@@ -150,7 +150,9 @@ export async function get24hRecords(
 
   const data = res.data;
 
-  if (data == null) return null;
+  const findedRecords: RecordWithCounterProps[] = [];
+
+  if (data == null || data.length <= 0) return findedRecords;
 
   const currentDate = new Date(); // Get the current date and time
   currentDate.setHours(0, 0, 0, 0); // Set the current time to the start of the day
@@ -174,7 +176,6 @@ export async function get24hRecords(
     };
   });
 
-  const findedRecords: RecordWithCounterProps[] = [];
   let totalTrackedHours = 0;
   hours.forEach((hour) => {
     if (hour.record == null) {
@@ -224,6 +225,8 @@ export async function get24hRecords(
       user_id: "untracked",
     });
   }
+
+  findedRecords.sort((a, b) => b.counter - a.counter);
 
   return findedRecords;
 }

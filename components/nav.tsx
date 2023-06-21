@@ -28,6 +28,7 @@ function LinkItem({ href, children }: LinkItemProps) {
     <Link
       href={href}
       className={`text-primary relative text-center w-full h-10 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background`}
+      replace={true}
     >
       {children}
     </Link>

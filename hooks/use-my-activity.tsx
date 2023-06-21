@@ -20,7 +20,7 @@ export const useMyActivity = ({ userId }: Props) => {
 
   return {
     data,
-    error,
+    error: error as Error,
     isLoading,
     invalidate,
     isRefetching,
