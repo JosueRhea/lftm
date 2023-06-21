@@ -26,7 +26,7 @@ export function MostTrackedActivities({
                 key={record.id}
                 icon={record.activity.icon}
                 name={record.activity.name}
-                value={record.counter}
+                value={record.percent}
                 setSelectedIndex={setSelectedIndex}
                 index={index}
                 selectedIndex={selectedIndex}

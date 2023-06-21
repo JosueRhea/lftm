@@ -199,9 +199,11 @@ export async function get24hRecords(
       findedRecords.push({
         ...record,
         counter: diff,
+        percent: (diff / 24) * 100,
       });
     } else {
       findedRecord.counter += diff;
+      findedRecord.percent = (diff / 24) * 100;
     }
     totalTrackedHours += diff;
   });
@@ -223,6 +225,7 @@ export async function get24hRecords(
       end_date: "untracked",
       id: "untracked",
       user_id: "untracked",
+      percent: (untrackedHours / 24) * 100
     });
   }
 
