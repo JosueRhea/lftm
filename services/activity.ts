@@ -152,7 +152,8 @@ export async function get24hRecords(
 
   const findedRecords: RecordWithCounterProps[] = [];
 
-  if (data == null || data.length <= 0) return findedRecords;
+  if (data == null || data.length <= 0)
+    return { records: findedRecords, totalCount: 0 };
 
   const currentDate = new Date(); // Get the current date and time
   currentDate.setHours(0, 0, 0, 0); // Set the current time to the start of the day
@@ -225,11 +226,11 @@ export async function get24hRecords(
       end_date: "untracked",
       id: "untracked",
       user_id: "untracked",
-      percent: (untrackedHours / 24) * 100
+      percent: (untrackedHours / 24) * 100,
     });
   }
 
   findedRecords.sort((a, b) => b.counter - a.counter);
 
-  return findedRecords;
+  return { records: findedRecords, totalCount: totalTrackedHours };
 }

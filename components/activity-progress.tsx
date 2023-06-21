@@ -9,6 +9,7 @@ interface Props {
   setSelectedIndex: (index: number) => void;
   index: number;
   selectedIndex: number;
+  totalCount: number;
 }
 
 export function ActivityProgress({
@@ -18,6 +19,7 @@ export function ActivityProgress({
   setSelectedIndex,
   index,
   selectedIndex,
+  totalCount,
 }: Props) {
   const IconComp = iconsKV[icon];
 
@@ -25,7 +27,7 @@ export function ActivityProgress({
 
   const isActive = index === selectedIndex;
 
-  const rounded = Math.round(value * 100) / 100;
+  const rounded = Math.floor((value / totalCount) * 100);
   return (
     <div
       className={cn("w-full flex gap-x-2 items-end", !isActive && "opacity-50")}
@@ -34,7 +36,7 @@ export function ActivityProgress({
       {IconComp && <IconComp className="w-4 h-4" />}
       <div className="w-full">
         <p className="text-zinc-600">{name}</p>
-        <Progress value={value} className="h-4" />
+        <Progress value={rounded} className="h-4" />
       </div>
       <p className="text-xs">{rounded}%</p>
     </div>

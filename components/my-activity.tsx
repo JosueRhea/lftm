@@ -36,9 +36,9 @@ export const MyActivity = ({ userId }: Props) => {
         {data && !error && (
           <>
             <div className="w-full flex items-center justify-center">
-              {data.length > 0 ? (
+              {data.records && data.records.length > 0 ? (
                 <ActivityChart
-                  data={data}
+                  data={data.records}
                   selectedIndex={activeIndex}
                   setSelectedIndex={setSelectedIndex}
                 />
@@ -49,9 +49,10 @@ export const MyActivity = ({ userId }: Props) => {
               )}
             </div>
             <MostTrackedActivities
-              data={data}
+              data={data.records}
               setSelectedIndex={setSelectedIndex}
               selectedIndex={activeIndex}
+              totalCount={data.totalCount}
             />
           </>
         )}

@@ -8,12 +8,14 @@ interface Props {
   data: RecordWithCounterProps[];
   setSelectedIndex: (index: number) => void;
   selectedIndex: number;
+  totalCount: number;
 }
 
 export function MostTrackedActivities({
   data,
   selectedIndex,
   setSelectedIndex,
+  totalCount,
 }: Props) {
   const { replace } = useRouter();
   return (
@@ -26,9 +28,10 @@ export function MostTrackedActivities({
                 key={record.id}
                 icon={record.activity.icon}
                 name={record.activity.name}
-                value={record.percent}
+                value={record.counter}
                 setSelectedIndex={setSelectedIndex}
                 index={index}
+                totalCount={totalCount}
                 selectedIndex={selectedIndex}
               />
             ))}

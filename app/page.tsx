@@ -33,7 +33,7 @@ export default async function Home() {
             <AlertDescription>{error.message}</AlertDescription>
           </Alert>
         )}
-        <Activities activities={activities} userId={userId} />
+        {!error && <Activities activities={activities} userId={userId} />}
       </div>
     </div>
   );
