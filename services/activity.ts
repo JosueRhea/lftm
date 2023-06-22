@@ -236,3 +236,33 @@ export async function get24hRecords(
 
   return { records: findedRecords, totalCount: totalTrackedHours };
 }
+
+export async function get7dRecords(
+  client: SupabaseClient<Database>,
+  { userId, date }: { userId: string; date: Date }
+) {
+  date.setHours(0, 0, 0, 0);
+  date.setDate(date.getDate() - 7); // Subtract 7 days from dayStart
+  const dayStart = new Date(date.getTime());
+  date.setDate(date.getDate() - 1); // Subtract 1 day from dayEnd
+  date.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
+  const dayEnd = new Date(date.getTime());
+
+  const isoDayStart = dayStart.toISOString();
+  const isoDayEnd = dayEnd.toISOString();
+
+  const res = await client
+    .from("record")
+    .select(`*, activity(*)`)
+    .eq("user_id", userId)
+    .or(
+      `and(created_at.gte.${isoDayStart},created_at.lte.${isoDayEnd}),and(end_date.gte.${isoDayStart},end_date.lte.${isoDayEnd}),and(created_at.lte.${isoDayStart},end_date.gte.${isoDayEnd})`
+    )
+    .order("created_at", { ascending: true });
+
+  console.log(res.data, res.error);
+
+  return {
+    data: null,
+  };
+}

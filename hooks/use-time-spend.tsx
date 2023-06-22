@@ -1,4 +1,4 @@
-import { get24hRecords } from "@/services/activity";
+import { get7dRecords } from "@/services/activity";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -7,37 +7,33 @@ interface Props {
   userId: string;
 }
 
-export const useMyActivity = ({ userId }: Props) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+export const useTimeSpend = ({ userId }: Props) => {
+  const [date, setDate] = useState(new Date());
   const client = createClientComponentClient();
   const { data, error, isLoading, isRefetching } = useQuery({
-    queryKey: ["use-my-activity", userId, selectedDate.toISOString()],
-    queryFn: () => get24hRecords(client, { userId, date: selectedDate }),
+    queryKey: ["use-time-spend", userId, date],
+    queryFn: () => get7dRecords(client, { userId, date }),
     refetchOnWindowFocus: false,
   });
   const queryClient = useQueryClient();
 
   const invalidate = async () => {
-    await queryClient.invalidateQueries([
-      "use-my-activity",
-      userId,
-      selectedDate,
-    ]);
+    await queryClient.invalidateQueries(["use-time-spend", userId, date]);
   };
 
   const onDateChange = (newDate: Date | undefined) => {
     if (newDate) {
-      setSelectedDate(newDate);
+      setDate(newDate);
     }
   };
 
   return {
     data,
-    error: error as Error,
+    error,
     isLoading,
-    invalidate,
     isRefetching,
+    selectedDate: date,
     onDateChange,
-    selectedDate,
+    invalidate,
   };
 };
