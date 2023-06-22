@@ -14,11 +14,10 @@ import {
 
 interface Props {
   selectedDate: Date;
-  onSelectDate: (date: Date) => void;
+  onSelectDate: (date: Date | undefined) => void;
 }
 
 export function SelectDate({ onSelectDate, selectedDate }: Props) {
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -30,7 +29,11 @@ export function SelectDate({ onSelectDate, selectedDate }: Props) {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+          {selectedDate ? (
+            format(selectedDate, "PPP")
+          ) : (
+            <span>Pick a date</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

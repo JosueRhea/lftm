@@ -20,8 +20,10 @@ export const useMyActivity = ({ userId }: Props) => {
     await queryClient.invalidateQueries(["currentActivity", userId]);
   };
 
-  const onDateChange = (newDate: Date) => {
-    setSelectedDate(newDate);
+  const onDateChange = (newDate: Date | undefined) => {
+    if (newDate) {
+      setSelectedDate(newDate);
+    }
   };
 
   return {
