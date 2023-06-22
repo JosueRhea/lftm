@@ -30,7 +30,7 @@ export function SelectDate({ onSelectDate, selectedDate }: Props) {
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {selectedDate ? (
-            format(selectedDate, "PPP")
+            <span className="truncate">{format(selectedDate, "PPP")}</span>
           ) : (
             <span>Pick a date</span>
           )}
