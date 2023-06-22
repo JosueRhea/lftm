@@ -1,7 +1,6 @@
 "use client";
 
 import { iconsKV } from "@/data/icons";
-import { useState } from "react";
 import {
   Cell,
   Pie,
@@ -29,16 +28,20 @@ const renderActiveShape = (props: any) => {
     payload,
   } = props;
 
-  const roundedValue = Math.round(payload.counter * 100) / 100;
-
   return (
     <g>
       <text x={cx} y={cy} dy={0} textAnchor="middle" fill={fill}>
         {payload.activity.name}
       </text>
-      <text x={cx} y={cy} dy={16} textAnchor="middle" fill={fill}>
-        {roundedValue} hours
-      </text>
+      {payload.counterTime && (
+        <text x={cx} y={cy} dy={16} textAnchor="middle" fill={fill}>
+          {payload.counterTime.hours +
+            "h" +
+            ":" +
+            payload.counterTime.minutes +
+            "m"}
+        </text>
+      )}
       <Sector
         cx={cx}
         cy={cy}
@@ -72,7 +75,15 @@ const CTooltip = ({ active, payload, label }: any) => {
       <div className="w-36 bg-white ring-1 ring-primary p-2 h-fit rounded-md flex flex-col justify-center">
         <div className="w-full flex items-center">
           {IconComp && <IconComp className="w-4 h-4 mr-2" />}
-          <p className="text-base">{value} hours</p>
+          {data.counterTime && (
+            <p className="text-base">
+              {data.counterTime.hours +
+                "h" +
+                ":" +
+                data.counterTime.minutes +
+                "m"}
+            </p>
+          )}
         </div>
         <div className="text-left">
           <p className="text-sm text-zinc-600">{name}</p>

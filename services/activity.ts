@@ -1,3 +1,4 @@
+import { getCounterFromDiff } from "@/lib/date";
 import {
   Database,
   RecordWithCounterProps,
@@ -225,6 +226,15 @@ export async function get24hRecords(
   }
 
   findedRecords.sort((a, b) => b.counter - a.counter);
+  findedRecords.forEach((record) => {
+    if (record.id === "untracked") return;
+    const endDate =
+      record.end_date != null
+        ? new Date(record.end_date).getTime()
+        : new Date().getTime();
+    const timeDiff = endDate - new Date(record.created_at as string).getTime();
+    record.counterTime = getCounterFromDiff(timeDiff);
+  });
 
   return { records: findedRecords, totalCount: totalTrackedHours };
 }
