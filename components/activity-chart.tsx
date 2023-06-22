@@ -122,7 +122,7 @@ export function ActivityChart({
             <Cell key={`cell-${index}`} className="fill-secondary" />
           ))}
         </Pie>
-        <Tooltip content={<CTooltip />} />
+        {/* <Tooltip content={<CTooltip />} /> */}
       </PieChart>
     </ResponsiveContainer>
   );

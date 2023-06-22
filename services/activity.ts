@@ -190,16 +190,19 @@ export async function get24hRecords(
     }
 
     // i wanna convert the diff to a hours like 1.2 or whatever
-    const diff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+    const sub = endDate.getTime() - startDate.getTime();
+    const diff = sub / (1000 * 60 * 60);
     if (findedRecord == null) {
       findedRecords.push({
         ...record,
         counter: diff,
         percent: (diff / 24) * 100,
+        counterTime: getCounterFromDiff(sub),
       });
     } else {
       findedRecord.counter += diff;
       findedRecord.percent = (diff / 24) * 100;
+      findedRecord.counterTime = getCounterFromDiff(sub);
     }
     totalTrackedHours += diff;
   });
@@ -226,15 +229,6 @@ export async function get24hRecords(
   }
 
   findedRecords.sort((a, b) => b.counter - a.counter);
-  findedRecords.forEach((record) => {
-    if (record.id === "untracked") return;
-    const endDate =
-      record.end_date != null
-        ? new Date(record.end_date).getTime()
-        : new Date().getTime();
-    const timeDiff = endDate - new Date(record.created_at as string).getTime();
-    record.counterTime = getCounterFromDiff(timeDiff);
-  });
 
   return { records: findedRecords, totalCount: totalTrackedHours };
 }
