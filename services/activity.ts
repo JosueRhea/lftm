@@ -1,4 +1,4 @@
-import { getCounterFromDiff } from "@/lib/date";
+import { getCounterFromStartAndEndDate, sumTwoCounters } from "@/lib/date";
 import {
   Database,
   RecordWithCounterProps,
@@ -154,7 +154,7 @@ export async function get24hRecords(
     .or(
       `and(created_at.gte.${isoDayStart},created_at.lte.${isoDayEnd}),and(end_date.gte.${isoDayStart},end_date.lte.${isoDayEnd}),and(created_at.lte.${isoDayStart},end_date.gte.${isoDayEnd})`
     )
-    .order("created_at", { ascending: false })
+    .order("created_at", { ascending: true })
     .throwOnError();
 
   const data = res.data as RecordWithRelationsProps[];
@@ -196,13 +196,18 @@ export async function get24hRecords(
       findedRecords.push({
         ...record,
         counter: diff,
-        percent: (diff / 24) * 100,
-        counterTime: getCounterFromDiff(sub),
+        counterTime: getCounterFromStartAndEndDate(startDate, endDate),
       });
     } else {
+      // const sum = findedRecord.counter + diff;
       findedRecord.counter += diff;
-      findedRecord.percent = (diff / 24) * 100;
-      findedRecord.counterTime = getCounterFromDiff(sub);
+      const newCounterTime = getCounterFromStartAndEndDate(startDate, endDate);
+      if (findedRecord.counterTime) {
+        findedRecord.counterTime = sumTwoCounters(
+          newCounterTime,
+          findedRecord.counterTime
+        );
+      }
     }
     totalTrackedHours += diff;
   });
@@ -224,7 +229,6 @@ export async function get24hRecords(
       end_date: "untracked",
       id: "untracked",
       user_id: "untracked",
-      percent: (untrackedHours / 24) * 100,
     });
   }
 

@@ -131,11 +131,10 @@ export type RecordWithRelationsProps = RecordProps & {
 };
 export type RecordWithCounterProps = RecordWithRelationsProps & {
   counter: number;
-  percent: number;
   counterTime?: {
     hours: number;
     minutes: number;
-    seconds: number;
     days: number;
+    seconds: number;
   };
 };

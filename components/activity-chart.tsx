@@ -100,6 +100,7 @@ export function ActivityChart({
   selectedIndex,
   setSelectedIndex,
 }: Props) {
+  
   return (
     <ResponsiveContainer
       width="100%"
