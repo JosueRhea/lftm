@@ -7,13 +7,17 @@ import { MostTrackedActivities } from "./most-tracked-activities";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircle } from "lucide-react";
+import { SelectDate } from "./select-date";
 
 interface Props {
   userId: string;
 }
 
 export const MyActivity = ({ userId }: Props) => {
-  const { data, error, isLoading, isRefetching } = useMyActivity({ userId });
+  const { data, error, isLoading, isRefetching, onDateChange, selectedDate } =
+    useMyActivity({
+      userId,
+    });
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (!data || isLoading || isRefetching) {
@@ -29,7 +33,7 @@ export const MyActivity = ({ userId }: Props) => {
       <CardHeader>
         <div className="w-full flex justify-between items-center">
           <CardTitle>My activity</CardTitle>
-          <p>Today</p>
+          <SelectDate selectedDate={selectedDate} onSelectDate={onDateChange} />
         </div>
       </CardHeader>
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">

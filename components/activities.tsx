@@ -63,7 +63,7 @@ export function Activities({ activities, userId }: Props) {
         </Alert>
       )}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
-        {activities.map((activity) => {
+        {error == null && activities.map((activity) => {
           const currentActivity = data?.data;
           const isActive =
             currentActivity != null &&

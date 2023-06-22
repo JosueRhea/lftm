@@ -125,8 +125,6 @@ export async function stopRecord(
     })
     .eq("id", currentRecordId);
 
-  console.log(recordData);
-
   if (recordData.error) return recordData;
   return await client
     .from("profiles")
@@ -138,24 +136,25 @@ export async function stopRecord(
 
 export async function get24hRecords(
   client: SupabaseClient<Database>,
-  { userId }: { userId: string }
+  { userId, date }: { userId: string; date: Date }
 ) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+  const dayStart = new Date(date.getTime());
+  date.setHours(23, 59, 59, 999);
+  const dayEnd = new Date(date.getTime());
+
   const res = await client
     .from("record")
     .select(`*, activity(*)`)
     .eq("user_id", userId)
-    // .gte("created_at", today.toISOString())
     .or(
-      `end_date.gte.${today.toISOString()},created_at.gte.${today.toISOString()}`
+      `and(created_at.gte.${dayStart.toISOString()},created_at.lte.${dayEnd.toISOString()}),and(end_date.gte.${dayStart.toISOString()},end_date.lte.${dayEnd.toISOString()})`
     )
     .order("created_at", { ascending: false })
     .throwOnError();
 
-  const data = res.data as RecordWithRelationsProps[];
 
-  // console.log(res.data);
+  const data = res.data as RecordWithRelationsProps[];
 
   const findedRecords: RecordWithCounterProps[] = [];
 
@@ -174,14 +173,18 @@ export async function get24hRecords(
 
     // const record = hour.record as RecordWithRelationsProps;
     const startDate = new Date(record.created_at as string);
-    if (startDate.getDate() !== today.getDate()) {
-      startDate.setTime(today.getTime());
+    if (startDate.getDate() !== dayStart.getDate()) {
+      startDate.setTime(dayStart.getTime());
     }
 
     const endDate =
       record.end_date != null
         ? new Date(record.end_date as string)
         : new Date();
+
+    if(endDate.getDate() > dayEnd.getDate()){
+      endDate.setTime(dayEnd.getTime())
+    }
 
     // i wanna convert the diff to a hours like 1.2 or whatever
     const diff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
