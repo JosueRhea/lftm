@@ -143,16 +143,18 @@ export async function get24hRecords(
   date.setHours(23, 59, 59, 999);
   const dayEnd = new Date(date.getTime());
 
+  const isoDayStart = dayStart.toISOString();
+  const isoDayEnd = dayEnd.toISOString();
+
   const res = await client
     .from("record")
     .select(`*, activity(*)`)
     .eq("user_id", userId)
     .or(
-      `and(created_at.gte.${dayStart.toISOString()},created_at.lte.${dayEnd.toISOString()}),and(end_date.gte.${dayStart.toISOString()},end_date.lte.${dayEnd.toISOString()})`
+      `and(created_at.gte.${isoDayStart},created_at.lte.${isoDayEnd}),and(end_date.gte.${isoDayStart},end_date.lte.${isoDayEnd}),and(created_at.lte.${isoDayStart},end_date.gte.${isoDayEnd})`
     )
     .order("created_at", { ascending: false })
     .throwOnError();
-
 
   const data = res.data as RecordWithRelationsProps[];
 
@@ -173,7 +175,7 @@ export async function get24hRecords(
 
     // const record = hour.record as RecordWithRelationsProps;
     const startDate = new Date(record.created_at as string);
-    if (startDate.getDate() !== dayStart.getDate()) {
+    if (startDate.getDate() < dayStart.getDate()) {
       startDate.setTime(dayStart.getTime());
     }
 
@@ -182,8 +184,8 @@ export async function get24hRecords(
         ? new Date(record.end_date as string)
         : new Date();
 
-    if(endDate.getDate() > dayEnd.getDate()){
-      endDate.setTime(dayEnd.getTime())
+    if (endDate.getDate() > dayEnd.getDate()) {
+      endDate.setTime(dayEnd.getTime());
     }
 
     // i wanna convert the diff to a hours like 1.2 or whatever
