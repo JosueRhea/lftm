@@ -19,10 +19,11 @@ export function Activity({
   disabled = false,
   data,
 }: Props) {
+  const { client } = useDb();
+  
   if (isPlus) {
     return <AddActivity />;
   }
-  const { client } = useDb();
 
   const name = data?.name;
   const icon = data?.icon as string;
