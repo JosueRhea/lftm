@@ -2,6 +2,7 @@
 
 import { Bar, ResponsiveContainer, XAxis, YAxis, BarChart } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { useTimeSpend } from "@/hooks/use-time-spend";
 
 const data = [
   {
@@ -59,7 +60,7 @@ interface Props {
 }
 
 export function TimeSpend({ userId }: Props) {
-  // const { isRefetching } = useTimeSpend({ userId });
+  const { error } = useTimeSpend({ userId });
 
   return (
     <Card className="col-span-4">

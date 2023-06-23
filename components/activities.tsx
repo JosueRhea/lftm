@@ -7,7 +7,7 @@ import { useCurrentActivity } from "@/hooks/use-current-activity";
 import { Skeleton } from "./ui/skeleton";
 import { useEffect } from "react";
 import { suscribeToCurrentUserData } from "@/services/activity";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useDb } from "@/hooks/use-db";
 
 interface Props {
   activities: ActivityProps[];
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function Activities({ activities, userId }: Props) {
-  const client = createClientComponentClient();
+  const { client } = useDb();
   const { data, error, invalidate, isLoading, isRefetching } =
     useCurrentActivity({ userId });
   useEffect(() => {
@@ -63,25 +63,26 @@ export function Activities({ activities, userId }: Props) {
         </Alert>
       )}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
-        {error == null && activities.map((activity) => {
-          const currentActivity = data?.data;
-          const isActive =
-            currentActivity != null &&
-            activity.id == currentActivity.activity_id;
-          const isDisabled =
-            (currentActivity != null &&
-              activity.id != currentActivity.activity_id) ||
-            isActive;
+        {error == null &&
+          activities.map((activity) => {
+            const currentActivity = data?.data;
+            const isActive =
+              currentActivity != null &&
+              activity.id == currentActivity.activity_id;
+            const isDisabled =
+              (currentActivity != null &&
+                activity.id != currentActivity.activity_id) ||
+              isActive;
 
-          return (
-            <Activity
-              key={activity.id}
-              data={activity}
-              disabled={isDisabled}
-              isActive={isActive}
-            />
-          );
-        })}
+            return (
+              <Activity
+                key={activity.id}
+                data={activity}
+                disabled={isDisabled}
+                isActive={isActive}
+              />
+            );
+          })}
         <Activity isPlus={true} />
       </div>
     </div>

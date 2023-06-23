@@ -4,7 +4,7 @@ import { AddActivity } from "./add-activity";
 import { ActivityProps } from "@/types/db";
 import { iconsKV } from "@/data/icons";
 import { createRecord } from "@/services/activity";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useDb } from "@/hooks/use-db";
 
 type Props = {
   isPlus?: boolean;
@@ -22,7 +22,7 @@ export function Activity({
   if (isPlus) {
     return <AddActivity />;
   }
-  const client = createClientComponentClient();
+  const { client } = useDb();
 
   const name = data?.name;
   const icon = data?.icon as string;

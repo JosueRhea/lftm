@@ -1,39 +1,30 @@
 import { get7dRecords } from "@/services/activity";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useDb } from "./use-db";
+import { PostgrestError } from "@supabase/supabase-js";
 
 interface Props {
   userId: string;
 }
 
 export const useTimeSpend = ({ userId }: Props) => {
-  const [date, setDate] = useState(new Date());
-  const client = createClientComponentClient();
+  const { client } = useDb();
   const { data, error, isLoading, isRefetching } = useQuery({
-    queryKey: ["use-time-spend", userId, date],
-    queryFn: () => get7dRecords(client, { userId, date }),
+    queryKey: ["use-time-spend", userId],
+    queryFn: () => get7dRecords(client, { userId, date: new Date() }),
     refetchOnWindowFocus: false,
   });
   const queryClient = useQueryClient();
 
   const invalidate = async () => {
-    await queryClient.invalidateQueries(["use-time-spend", userId, date]);
-  };
-
-  const onDateChange = (newDate: Date | undefined) => {
-    if (newDate) {
-      setDate(newDate);
-    }
+    await queryClient.invalidateQueries(["use-time-spend", userId]);
   };
 
   return {
     data,
-    error,
+    error: error as PostgrestError,
     isLoading,
     isRefetching,
-    selectedDate: date,
-    onDateChange,
     invalidate,
   };
 };

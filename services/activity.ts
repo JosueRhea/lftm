@@ -241,6 +241,7 @@ export async function get7dRecords(
   client: SupabaseClient<Database>,
   { userId, date }: { userId: string; date: Date }
 ) {
+  console.log("Calledrecord");
   date.setHours(0, 0, 0, 0);
   date.setDate(date.getDate() - 7); // Subtract 7 days from dayStart
   const dayStart = new Date(date.getTime());

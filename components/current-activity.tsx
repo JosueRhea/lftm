@@ -2,18 +2,18 @@
 import { StopCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { useEffect } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { stopRecord, suscribeToCurrentUserData } from "@/services/activity";
 import { useCurrentActivity } from "@/hooks/use-current-activity";
 import { Skeleton } from "./ui/skeleton";
 import { Counter } from "./counter";
+import { useDb } from "@/hooks/use-db";
 
 interface Props {
   userId: string;
 }
 
 export function CurrentActivity({ userId }: Props) {
-  const client = createClientComponentClient();
+  const { client } = useDb();
   const {
     data: res,
     error,

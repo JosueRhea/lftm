@@ -9,12 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useDb } from "@/hooks/use-db";
 
 export function Login() {
-  const supabase = createClientComponentClient();
+  const { client: supabase } = useDb();
   const router = useRouter();
 
   const handleLogin = async () => {

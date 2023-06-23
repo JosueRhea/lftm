@@ -1,7 +1,7 @@
 import { get24hRecords } from "@/services/activity";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useDb } from "./use-db";
 
 interface Props {
   userId: string;
@@ -9,7 +9,7 @@ interface Props {
 
 export const useMyActivity = ({ userId }: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const client = createClientComponentClient();
+  const { client } = useDb();
   const { data, error, isLoading, isRefetching } = useQuery({
     queryKey: ["use-my-activity", userId, selectedDate.toISOString()],
     queryFn: () => get24hRecords(client, { userId, date: selectedDate }),

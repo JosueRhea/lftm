@@ -1,13 +1,13 @@
 import { getCurrentActivity } from "@/services/activity";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useDb } from "./use-db";
 
 interface Props {
   userId: string;
 }
 
 export function useCurrentActivity({ userId }: Props) {
-  const client = createClientComponentClient();
+  const { client } = useDb();
   const { data, error, isLoading, isRefetching } = useQuery({
     queryKey: ["currentActivity", userId],
     queryFn: () => getCurrentActivity(client, { userId }),
