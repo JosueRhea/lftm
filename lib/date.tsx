@@ -115,3 +115,20 @@ export function sumTwoCounters(counter1: Counter, counter2: Counter) {
     seconds: totalSeconds,
   };
 }
+
+export function createDayDatesArray({ count }: { count: number }) {
+  const datesArray = [];
+
+  for (let i = count - 1; i >= 0; i--) {
+    const dayStart = new Date();
+    dayStart.setDate(dayStart.getDate() - i);
+    dayStart.setHours(0, 0, 0, 0);
+
+    const dayEnd = new Date(dayStart.getTime());
+    dayEnd.setHours(23, 59, 59, 999);
+
+    datesArray.push({ start: dayStart, end: dayEnd });
+  }
+
+  return datesArray;
+}

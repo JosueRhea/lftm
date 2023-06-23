@@ -12,7 +12,7 @@ export const useTimeSpend = ({ userId }: Props) => {
   const { data, error, isLoading, isRefetching } = useQuery({
     queryKey: ["use-time-spend", userId],
     queryFn: () => get7dRecords(client, { userId, date: new Date() }),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
   const queryClient = useQueryClient();
 

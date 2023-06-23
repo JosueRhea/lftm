@@ -1,8 +1,13 @@
-import { getCounterFromStartAndEndDate, sumTwoCounters } from "@/lib/date";
+import {
+  createDayDatesArray,
+  getCounterFromStartAndEndDate,
+  sumTwoCounters,
+} from "@/lib/date";
 import {
   Database,
   RecordWithCounterProps,
   RecordWithRelationsProps,
+  TimeSpendProps,
 } from "@/types/db";
 import { SupabaseClient } from "@supabase/supabase-js";
 
@@ -241,11 +246,10 @@ export async function get7dRecords(
   client: SupabaseClient<Database>,
   { userId, date }: { userId: string; date: Date }
 ) {
-  console.log("Calledrecord");
   date.setHours(0, 0, 0, 0);
   date.setDate(date.getDate() - 7); // Subtract 7 days from dayStart
   const dayStart = new Date(date.getTime());
-  date.setDate(date.getDate() - 1); // Subtract 1 day from dayEnd
+  date.setDate(date.getDate() + 7); // Subtract 1 day from dayEnd
   date.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
   const dayEnd = new Date(date.getTime());
 
@@ -256,14 +260,108 @@ export async function get7dRecords(
     .from("record")
     .select(`*, activity(*)`)
     .eq("user_id", userId)
+    .eq("activity_id", "ca63cc25-5715-4ced-bc7a-075af70472c4")
     .or(
       `and(created_at.gte.${isoDayStart},created_at.lte.${isoDayEnd}),and(end_date.gte.${isoDayStart},end_date.lte.${isoDayEnd}),and(created_at.lte.${isoDayStart},end_date.gte.${isoDayEnd})`
     )
     .order("created_at", { ascending: true });
 
-  console.log(res.data, res.error);
+  const data = res.data as RecordWithRelationsProps[];
+
+  if (data == null || data.length <= 0) return { dayRecords: [] };
+
+  const datesArray = createDayDatesArray({ count: 7 });
+
+  const parsedDays = datesArray.map((day) => {
+    const start = day.start.getTime();
+    const end = day.end.getTime();
+
+    const findedDays = data.filter((record) => {
+      const recordStart = new Date(record.created_at as string).getTime();
+      const recordEnd = record.end_date
+        ? new Date(record.end_date).getTime()
+        : new Date().getTime();
+
+      if (
+        (recordStart >= start && recordStart <= end) ||
+        (recordEnd >= start && recordEnd <= end) ||
+        (recordStart <= start && recordEnd >= end)
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+
+    return {
+      start: day.start,
+      end: day.end,
+      records: findedDays,
+    };
+  });
+
+  const daysData: TimeSpendProps[] = parsedDays.map((day) => {
+    const start = day.start;
+    const end = day.end;
+
+    const defaultCounterTime = {
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      days: 0,
+    };
+
+    const formatedDate = start.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+    if (day.records.length <= 0)
+      return {
+        dayStart: day.start,
+        dayEnd: day.end,
+        counter: 0,
+        counterTime: defaultCounterTime,
+        formatedDate,
+      };
+
+    const startTime = start.getTime();
+    const endTime = end.getTime();
+
+    let counter = 0.0;
+    let counterTime = defaultCounterTime;
+    day.records.forEach((record) => {
+      const startDate = new Date(record.created_at as string);
+      if (startDate.getTime() < startTime) {
+        startDate.setTime(startTime);
+      }
+
+      const endDate =
+        record.end_date != null
+          ? new Date(record.end_date as string)
+          : new Date();
+
+      if (endDate.getTime() > endTime) {
+        endDate.setTime(endTime);
+      }
+
+      const sub = endDate.getTime() - startDate.getTime();
+      const diff = sub / (1000 * 60 * 60);
+      const newCounterTime = getCounterFromStartAndEndDate(startDate, endDate);
+      counter += diff;
+      counterTime = sumTwoCounters(newCounterTime, counterTime);
+    });
+
+    return {
+      dayStart: day.start,
+      dayEnd: day.end,
+      counter: counter,
+      counterTime: counterTime,
+      formatedDate,
+    };
+  });
 
   return {
-    data: null,
+    dayRecords: daysData,
   };
 }

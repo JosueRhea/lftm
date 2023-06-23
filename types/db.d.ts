@@ -129,12 +129,21 @@ export type RecordProps = Database["public"]["Tables"]["record"]["Row"];
 export type RecordWithRelationsProps = RecordProps & {
   activity: ActivityProps;
 };
+type CounterTimeProps = {
+  hours: number;
+  minutes: number;
+  days: number;
+  seconds: number;
+};
 export type RecordWithCounterProps = RecordWithRelationsProps & {
   counter: number;
-  counterTime?: {
-    hours: number;
-    minutes: number;
-    days: number;
-    seconds: number;
-  };
+  counterTime?: CounterTimeProps;
+};
+
+export type TimeSpendProps = {
+  dayStart: Date;
+  dayEnd: Date;
+  counter: number;
+  counterTime: CounterTimeProps;
+  formatedDate: string;
 };
