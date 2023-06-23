@@ -60,7 +60,7 @@ interface Props {
 }
 
 export function TimeSpend({ userId }: Props) {
-  const { error } = useTimeSpend({ userId });
+  // const { error } = useTimeSpend({ userId });
 
   return (
     <Card className="col-span-4">
