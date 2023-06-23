@@ -1,6 +1,5 @@
 "use client";
 import { ActivityProps } from "@/types/db";
-import { Activity } from "./activity";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Terminal } from "lucide-react";
 import { useCurrentActivity } from "@/hooks/use-current-activity";
@@ -8,6 +7,7 @@ import { Skeleton } from "./ui/skeleton";
 import { useEffect } from "react";
 import { suscribeToCurrentUserData } from "@/services/activity";
 import { useDb } from "@/hooks/use-db";
+import { ActivitiesList } from "./activities-list";
 
 interface Props {
   activities: ActivityProps[];
@@ -16,8 +16,7 @@ interface Props {
 
 export function Activities({ activities, userId }: Props) {
   const { client } = useDb();
-  const { data, error, invalidate, isLoading, isRefetching } =
-    useCurrentActivity({ userId });
+  const { data, error, invalidate, isLoading } = useCurrentActivity({ userId });
   useEffect(() => {
     const channel = suscribeToCurrentUserData(client, {
       userId,
@@ -63,27 +62,10 @@ export function Activities({ activities, userId }: Props) {
         </Alert>
       )}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
-        {error == null &&
-          activities.map((activity) => {
-            const currentActivity = data?.data;
-            const isActive =
-              currentActivity != null &&
-              activity.id == currentActivity.activity_id;
-            const isDisabled =
-              (currentActivity != null &&
-                activity.id != currentActivity.activity_id) ||
-              isActive;
-
-            return (
-              <Activity
-                key={activity.id}
-                data={activity}
-                disabled={isDisabled}
-                isActive={isActive}
-              />
-            );
-          })}
-        <Activity isPlus={true} />
+        <ActivitiesList
+          userId={userId}
+          currentActivityId={data?.data?.activity?.id ?? null}
+        />
       </div>
     </div>
   );

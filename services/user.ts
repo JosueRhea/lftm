@@ -9,7 +9,8 @@ export async function getUserData(
     .from("profiles")
     .select("activity(*), *")
     .eq("id", userId)
-    .single();
+    .single()
+    .throwOnError();
 }
 
 // export async function updateUserData(

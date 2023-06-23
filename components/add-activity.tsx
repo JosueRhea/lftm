@@ -16,8 +16,8 @@ import { FormEvent, useRef, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircle } from "lucide-react";
 import { createActivity } from "@/services/activity";
-import { useRouter } from "next/navigation";
 import { useDb } from "@/hooks/use-db";
+import { useActivities } from "@/hooks/use-activities";
 
 export function AddActivity() {
   const [open, setOpen] = useState(false);
@@ -25,8 +25,8 @@ export function AddActivity() {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const {client} = useDb()
-  const router = useRouter();
+  const { client } = useDb();
+  const { invalidate } = useActivities({});
 
   const handleOnSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,7 +59,7 @@ export function AddActivity() {
     }
 
     setOpen(false);
-    router.refresh();
+    invalidate();
   };
 
   return (
