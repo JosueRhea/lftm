@@ -244,8 +244,13 @@ export async function get24hRecords(
 
 export async function get7dRecords(
   client: SupabaseClient<Database>,
-  { userId, date }: { userId: string; date: Date }
+  {
+    userId,
+    date,
+    activityId,
+  }: { userId: string; date: Date; activityId: string | null | undefined }
 ) {
+  if (!activityId) return { dayRecords: [] };
   date.setHours(0, 0, 0, 0);
   date.setDate(date.getDate() - 7); // Subtract 7 days from dayStart
   const dayStart = new Date(date.getTime());
@@ -260,7 +265,7 @@ export async function get7dRecords(
     .from("record")
     .select(`*, activity(*)`)
     .eq("user_id", userId)
-    .eq("activity_id", "ca63cc25-5715-4ced-bc7a-075af70472c4")
+    .eq("activity_id", activityId)
     .or(
       `and(created_at.gte.${isoDayStart},created_at.lte.${isoDayEnd}),and(end_date.gte.${isoDayStart},end_date.lte.${isoDayEnd}),and(created_at.lte.${isoDayStart},end_date.gte.${isoDayEnd})`
     )
