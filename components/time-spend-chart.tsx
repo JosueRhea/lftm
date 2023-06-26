@@ -1,4 +1,5 @@
 import { TimeSpendProps } from "@/types/db";
+import { useTheme } from "next-themes";
 import { useState } from "react";
 import {
   Bar,
@@ -22,7 +23,7 @@ const CTooltip = ({ active, payload, label }: any) => {
     // const value = Math.round(data.counter * 100) / 100;
     // const name = data.activity.name;
     return (
-      <div className="w-36 bg-white ring-1 ring-primary p-2 h-fit rounded-sm flex flex-col justify-center">
+      <div className="w-36 bg-background text-primary ring-1 ring-muted p-2 h-fit rounded-sm flex flex-col justify-center">
         {data.counterTime && (
           <div className="w-full flex flex-col items-center">
             <p className="text-sm">{data.formatedDate}</p>
@@ -44,6 +45,9 @@ const CTooltip = ({ active, payload, label }: any) => {
 
 export const TimeSpendChart = ({ data }: Props) => {
   const [activeIndex, setActiveIndex] = useState(-1);
+  const { theme } = useTheme();
+
+  const tooltipBackground = theme == "dark" ? "#1f2937" : "#f3f4f6";
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data}>
@@ -55,7 +59,7 @@ export const TimeSpendChart = ({ data }: Props) => {
           axisLine={false}
         />
         <YAxis fontSize={12} width={40} tickLine={false} axisLine={false} />
-        <Tooltip content={<CTooltip />} cursor={{ fill: "#f3f4f6" }} />
+        <Tooltip content={<CTooltip />} cursor={{ fill: tooltipBackground }} />
         <Bar
           dataKey="counter"
           radius={[4, 4, 0, 0]}

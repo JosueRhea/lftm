@@ -35,7 +35,7 @@ export function ActivityProgress({
     >
       {IconComp && <IconComp className="w-4 h-4" />}
       <div className="w-full">
-        <p className="text-zinc-600">{name}</p>
+        <p className="text-muted-foreground">{name}</p>
         <Progress value={rounded} className="h-4" />
       </div>
       <p className="text-xs">{rounded}%</p>

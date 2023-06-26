@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { ToggleTheme } from "./toggle-theme";
 
 interface Props {
   username?: string;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 export function Header({ avatar, username }: Props) {
-  const avatarFallback = username ? username[0] : "NA";
+  const avatarFallback = username ? username[0] : "NA"
 
   return (
     <header className="mt-4 flex items-center justify-between">
@@ -15,9 +16,7 @@ export function Header({ avatar, username }: Props) {
         <span>lftm</span> <Badge>Beta</Badge>
       </h3>
       <div className="flex items-center gap-x-2">
-        <p className="leading-7 [&:not(:first-child)]:mt-6">
-          {username ? username : "Name"}
-        </p>
+        <ToggleTheme />
         <Avatar>
           <AvatarImage src={avatar} />
           <AvatarFallback>{avatarFallback}</AvatarFallback>
