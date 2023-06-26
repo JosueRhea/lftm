@@ -2,17 +2,19 @@ import { deleteRecordActivity, getActivityHistory } from "@/services/activity";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDb } from "./use-db";
 import { RecordWithRelationsProps } from "@/types/db";
+import { useState } from "react";
 
 interface Props {
   userId: string;
 }
 
 export function useActivityHistory({ userId }: Props) {
-  const key = ["activity-history", userId];
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const { client } = useDb();
+  const key = ["activity-history", userId, selectedDate.toISOString()];
   const { data, isLoading, isRefetching, error } = useQuery({
     queryKey: key,
-    queryFn: () => getActivityHistory(client, { userId }),
+    queryFn: () => getActivityHistory(client, { userId, date: selectedDate }),
   });
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
@@ -20,7 +22,7 @@ export function useActivityHistory({ userId }: Props) {
       await deleteRecordActivity(client, { recordId });
     },
     onMutate: async (recordId) => {
-      await queryClient.cancelQueries(key);
+      await queryClient.cancelQueries();
 
       const previousRecords = queryClient.getQueryData(
         key
@@ -37,12 +39,19 @@ export function useActivityHistory({ userId }: Props) {
       queryClient.setQueryData(key, context?.previousRecords);
     },
     onSettled: () => {
-      queryClient.invalidateQueries(key);
+      queryClient.invalidateQueries();
     },
   });
 
   const deleteRecord = async (recordId: string) => {
     await mutateAsync(recordId);
+  };
+
+  const onDateChange = (newDate: Date | undefined) => {
+    if (newDate) {
+      setSelectedDate(newDate);
+      queryClient.invalidateQueries(key);
+    }
   };
 
   return {
@@ -51,5 +60,7 @@ export function useActivityHistory({ userId }: Props) {
     isLoading,
     isRefetching,
     deleteRecord,
+    onDateChange,
+    selectedDate,
   };
 }

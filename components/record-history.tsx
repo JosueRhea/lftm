@@ -70,10 +70,10 @@ export function RecordHistory({ data, userId }: Props) {
         <DropdownMenuContent>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Pen className="mr-2 h-4 w-4" />
             <span>Edit</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem
             onClick={
               isCurrentActivity ? undefined : () => deleteRecord(data.id)

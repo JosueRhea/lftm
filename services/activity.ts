@@ -375,18 +375,23 @@ export async function getActivityHistory(
   client: SupabaseClient<Database>,
   {
     userId,
+    date,
   }: {
     userId: string;
+    date: Date;
   }
 ) {
-  const dayStart = new Date();
-  dayStart.setHours(0, 0, 0, 0);
-  const isoDayStart = dayStart.toISOString();
+  date.setHours(0, 0, 0, 0);
+  const isoDayStart = date.toISOString();
+  date.setHours(23, 59, 59, 999);
+  const dayEnd = new Date(date.getTime());
+  const isoDayEnd = dayEnd.toISOString();
   const { data, error } = await client
     .from("record")
     .select("*, activity(*)")
     .eq("user_id", userId)
     .gte("created_at", isoDayStart)
+    .lte("created_at", isoDayEnd)
     .order("created_at", {
       ascending: false,
     });
