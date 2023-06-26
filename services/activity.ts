@@ -370,3 +370,25 @@ export async function get7dRecords(
     dayRecords: daysData,
   };
 }
+
+export async function getActivityHistory(
+  client: SupabaseClient<Database>,
+  {
+    userId,
+  }: {
+    userId: string;
+  }
+) {
+  const dayStart = new Date();
+  dayStart.setHours(0, 0, 0, 0);
+  const isoDayStart = dayStart.toISOString();
+  return await client
+    .from("record")
+    .select("*, activity(*)")
+    .eq("user_id", userId)
+    .gte("created_at", isoDayStart)
+    .order("created_at", {
+      ascending: false,
+    })
+    .throwOnError();
+}
