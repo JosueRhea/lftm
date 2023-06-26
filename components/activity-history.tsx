@@ -20,12 +20,14 @@ export function ActivityHistory({ userId }: Props) {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-y-2">
-        {data?.map((record) => (
-          <RecordHistory
-            key={record.id}
-            data={record as RecordWithRelationsProps}
-          />
-        ))}
+        {data &&
+          data?.map((record) => (
+            <RecordHistory
+              key={record.id}
+              data={record as RecordWithRelationsProps}
+              userId={userId}
+            />
+          ))}
       </CardContent>
     </Card>
   );

@@ -19,16 +19,22 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useActivityHistory } from "@/hooks/use-activity-history";
 
 interface Props {
   data: RecordWithRelationsProps;
+  userId: string;
 }
 
-export function RecordHistory({ data }: Props) {
+export function RecordHistory({ data, userId }: Props) {
+  const { deleteRecord } = useActivityHistory({ userId });
+
   const IconComp = iconsKV[data.activity.icon];
   const name = data.activity.name;
   const createdAt = new Date(data.created_at as string);
   const endDate = data.end_date ? new Date(data.end_date) : null;
+  const isCurrentActivity = data.end_date == null;
+
   return (
     <div className="flex items-center w-full space-x-4 rounded-md border p-4">
       <div className="flex w-full items-center space-x-4">
@@ -45,13 +51,17 @@ export function RecordHistory({ data }: Props) {
       <DropdownMenu>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="p-2">
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="p-2"
+                disabled={isCurrentActivity}
+              >
+                <TooltipTrigger asChild>
                   <MoreVertical className="w-6 h-6 stroke-primary" />
-                </Button>
-              </DropdownMenuTrigger>
-            </TooltipTrigger>
+                </TooltipTrigger>
+              </Button>
+            </DropdownMenuTrigger>
             <TooltipContent>
               <p>Actions</p>
             </TooltipContent>
@@ -64,7 +74,11 @@ export function RecordHistory({ data }: Props) {
             <Pen className="mr-2 h-4 w-4" />
             <span>Edit</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={
+              isCurrentActivity ? undefined : () => deleteRecord(data.id)
+            }
+          >
             <Trash className="mr-2 h-4 w-4" />
             <span>Remove</span>
           </DropdownMenuItem>

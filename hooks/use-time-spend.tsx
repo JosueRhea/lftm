@@ -4,7 +4,6 @@ import { useDb } from "./use-db";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useActivities } from "./use-activities";
 import { useEffect, useState } from "react";
-import { ActivityProps } from "@/types/db";
 
 interface Props {
   userId: string;

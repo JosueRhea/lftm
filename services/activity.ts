@@ -382,13 +382,31 @@ export async function getActivityHistory(
   const dayStart = new Date();
   dayStart.setHours(0, 0, 0, 0);
   const isoDayStart = dayStart.toISOString();
-  return await client
+  const { data, error } = await client
     .from("record")
     .select("*, activity(*)")
     .eq("user_id", userId)
     .gte("created_at", isoDayStart)
     .order("created_at", {
       ascending: false,
-    })
-    .throwOnError();
+    });
+
+  if (error) {
+    throw new Error("Something went wrong");
+  }
+
+  return data;
 }
+
+export const deleteRecordActivity = async (
+  client: SupabaseClient<Database>,
+  { recordId }: { recordId: string }
+) => {
+  const res = await client.from("record").delete().eq("id", recordId);
+
+  if (res.error) {
+    throw new Error("Something went wrong");
+  }
+
+  return res.data;
+};
