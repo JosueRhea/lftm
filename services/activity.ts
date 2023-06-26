@@ -318,7 +318,7 @@ export async function get7dRecords(
 
     const formatedDate = start.toLocaleDateString("en-US", {
       day: "2-digit",
-      month: "2-digit",
+      month: "short",
     });
 
     if (day.records.length <= 0)

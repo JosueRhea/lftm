@@ -1,7 +1,9 @@
 import { TimeSpendProps } from "@/types/db";
+import { useState } from "react";
 import {
   Bar,
   BarChart,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -23,7 +25,7 @@ const CTooltip = ({ active, payload, label }: any) => {
       <div className="w-36 bg-white ring-1 ring-primary p-2 h-fit rounded-sm flex flex-col justify-center">
         {data.counterTime && (
           <div className="w-full flex flex-col items-center">
-            <p className="text-sm">Time tracked</p>
+            <p className="text-sm">{data.formatedDate}</p>
             <p className="text-base">
               {data.counterTime.hours +
                 "h" +
@@ -41,6 +43,7 @@ const CTooltip = ({ active, payload, label }: any) => {
 };
 
 export const TimeSpendChart = ({ data }: Props) => {
+  const [activeIndex, setActiveIndex] = useState(-1);
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data}>
@@ -52,8 +55,20 @@ export const TimeSpendChart = ({ data }: Props) => {
           axisLine={false}
         />
         <YAxis fontSize={12} width={40} tickLine={false} axisLine={false} />
-        <Tooltip content={<CTooltip />} cursor={{ fill: "#f9fafb" }} />
-        <Bar dataKey="counter" fill="#adfa1d" radius={[4, 4, 0, 0]} />
+        <Tooltip content={<CTooltip />} cursor={{ fill: "#f3f4f6" }} />
+        <Bar
+          dataKey="counter"
+          radius={[4, 4, 0, 0]}
+          onMouseEnter={(_, index) => setActiveIndex(index)}
+        >
+          {data.map((_, index) => (
+            <Cell
+              cursor="pointer"
+              fill={index === activeIndex ? "#bef264" : "#adfa1d"}
+              key={`cell-${index}`}
+            />
+          ))}
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   );
