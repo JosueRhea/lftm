@@ -3,6 +3,22 @@ import { RecordWithRelationsProps } from "@/types/db";
 import { format } from "date-fns";
 import { Button } from "./ui/button";
 import { MoreVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Trash } from "lucide-react";
+import { Pen } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface Props {
   data: RecordWithRelationsProps;
@@ -25,9 +41,35 @@ export function RecordHistory({ data }: Props) {
           </p>
         </div>
       </div>
-      <Button variant="ghost" className="p-2">
-        <MoreVertical className="w-6 h-6 stroke-primary" />
-      </Button>
+
+      <DropdownMenu>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="p-2">
+                  <MoreVertical className="w-6 h-6 stroke-primary" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Actions</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <Pen className="mr-2 h-4 w-4" />
+            <span>Edit</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Trash className="mr-2 h-4 w-4" />
+            <span>Remove</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
