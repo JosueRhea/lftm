@@ -42,8 +42,8 @@ export function RecordHistory({ data, userId }: Props) {
         <div className="flex flex-col gap-y-1">
           <p className="text-base font-medium leading-none">{name}</p>
           <p className="text-sm leading-none text-muted-foreground">
-            from {format(createdAt, "hh:mm a")} to{" "}
-            {endDate ? format(endDate, "hh:mm a") : "now"}
+            <strong>from</strong> {format(createdAt, "MMMM dd, hh:mm a")} <strong>to</strong>{" "}
+            {endDate ? format(endDate, "MMMM dd,hh:mm a") : "now"}
           </p>
         </div>
       </div>
