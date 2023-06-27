@@ -415,3 +415,18 @@ export const deleteRecordActivity = async (
 
   return res.data;
 };
+
+export async function updateRecordActivity(
+  client: SupabaseClient<Database>,
+  { record }: { record: RecordWithRelationsProps }
+) {
+  const res = await client
+    .from("record")
+    .update({ created_at: record.created_at, end_date: record.end_date })
+    .eq("id", record.id);
+  if (res.error) {
+    throw new Error("Something went wrong updating the record");
+  }
+
+  return res.data;
+}

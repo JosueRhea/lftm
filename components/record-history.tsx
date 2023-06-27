@@ -20,6 +20,8 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { useActivityHistory } from "@/hooks/use-activity-history";
+import { CustomRecord } from "./custom-record";
+import { useState } from "react";
 
 interface Props {
   data: RecordWithRelationsProps;
@@ -28,6 +30,7 @@ interface Props {
 
 export function RecordHistory({ data, userId }: Props) {
   const { deleteRecord } = useActivityHistory({ userId });
+  const [openEdit, setOpenEdit] = useState(false);
 
   const IconComp = iconsKV[data.activity.icon];
   const name = data.activity.name;
@@ -42,13 +45,13 @@ export function RecordHistory({ data, userId }: Props) {
         <div className="flex flex-col gap-y-1">
           <p className="text-base font-medium leading-none">{name}</p>
           <p className="text-sm leading-none text-muted-foreground">
-            <strong>from</strong> {format(createdAt, "MMMM dd, hh:mm a")} <strong>to</strong>{" "}
-            {endDate ? format(endDate, "MMMM dd,hh:mm a") : "now"}
+            from {format(createdAt, "MMMM dd, hh:mm a")} to{" "}
+            {endDate ? format(endDate, "MMMM dd, hh:mm a") : "now"}
           </p>
         </div>
       </div>
 
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <TooltipProvider>
           <Tooltip>
             <DropdownMenuTrigger asChild>
@@ -70,10 +73,10 @@ export function RecordHistory({ data, userId }: Props) {
         <DropdownMenuContent>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpenEdit(true)}>
             <Pen className="mr-2 h-4 w-4" />
             <span>Edit</span>
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={
               isCurrentActivity ? undefined : () => deleteRecord(data.id)
@@ -84,6 +87,12 @@ export function RecordHistory({ data, userId }: Props) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <CustomRecord
+        open={openEdit}
+        onOpenChange={setOpenEdit}
+        record={data}
+        userId={userId}
+      />
     </div>
   );
 }

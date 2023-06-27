@@ -1,4 +1,8 @@
-import { deleteRecordActivity, getActivityHistory } from "@/services/activity";
+import {
+  deleteRecordActivity,
+  getActivityHistory,
+  updateRecordActivity,
+} from "@/services/activity";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDb } from "./use-db";
 import { RecordWithRelationsProps } from "@/types/db";
@@ -17,7 +21,7 @@ export function useActivityHistory({ userId }: Props) {
     queryFn: () => getActivityHistory(client, { userId, date: selectedDate }),
   });
   const queryClient = useQueryClient();
-  const { mutateAsync } = useMutation({
+  const { mutateAsync: deleteRecordMut } = useMutation({
     mutationFn: async (recordId: string) => {
       await deleteRecordActivity(client, { recordId });
     },
@@ -43,8 +47,42 @@ export function useActivityHistory({ userId }: Props) {
     },
   });
 
+  const { mutate: updateRecordMut } = useMutation({
+    mutationFn: async (newRecord: RecordWithRelationsProps) => {
+      await updateRecordActivity(client, { record: newRecord });
+    },
+    onMutate: async (newRecord: RecordWithRelationsProps) => {
+      await queryClient.cancelQueries();
+      const previousRecords = queryClient.getQueryData(
+        key
+      ) as RecordWithRelationsProps[];
+      const recordIndex = previousRecords.findIndex(
+        (record) => record.id === newRecord.id
+      );
+
+      if (recordIndex !== -1) {
+        // Update the record with the new data
+        previousRecords[recordIndex] = newRecord;
+
+        // Update the query data with the modified records
+        queryClient.setQueryData(key, previousRecords);
+      }
+      return { previousRecords };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(key, context?.previousRecords);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries();
+    },
+  });
+
   const deleteRecord = async (recordId: string) => {
-    await mutateAsync(recordId);
+    await deleteRecordMut(recordId);
+  };
+
+  const updateRecord = (newRecord: RecordWithRelationsProps) => {
+    updateRecordMut(newRecord);
   };
 
   const onDateChange = (newDate: Date | undefined) => {
@@ -62,5 +100,6 @@ export function useActivityHistory({ userId }: Props) {
     deleteRecord,
     onDateChange,
     selectedDate,
+    updateRecord,
   };
 }

@@ -132,3 +132,19 @@ export function createDayDatesArray({ count }: { count: number }) {
 
   return datesArray;
 }
+
+function ten(i: number) {
+  return (i < 10 ? "0" : "") + i;
+}
+
+export function toDatetimeLocal(date: string) {
+  const dateCons = new Date(date);
+  const YYYY = dateCons.getFullYear();
+  const MM = ten(dateCons.getMonth() + 1);
+  const DD = ten(dateCons.getDate());
+  const HH = ten(dateCons.getHours());
+  const II = ten(dateCons.getMinutes());
+  const SS = ten(dateCons.getSeconds());
+
+  return YYYY + "-" + MM + "-" + DD + "T" + HH + ":" + II + ":" + SS;
+}

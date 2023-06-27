@@ -18,6 +18,7 @@ import { AlertCircle } from "lucide-react";
 import { createActivity } from "@/services/activity";
 import { useDb } from "@/hooks/use-db";
 import { useActivities } from "@/hooks/use-activities";
+import { FormErrors } from "./form-errors";
 
 export function AddActivity() {
   const [open, setOpen] = useState(false);
@@ -95,19 +96,7 @@ export function AddActivity() {
           </label>
           <Input id="name" ref={nameRef} className="col-span-3 mt-2" />
           <ActivitiesIcons onChange={setSelectedIcon} />
-          {errors.length > 0 && (
-            <Alert variant="destructive" className="my-2">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <ul>
-                {errors.map((error) => (
-                  <li className="list-disc" key={error}>
-                    <AlertDescription>{error}</AlertDescription>
-                  </li>
-                ))}
-              </ul>
-            </Alert>
-          )}
+          <FormErrors errors={errors} />
           <DialogFooter className="mt-2">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
