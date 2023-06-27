@@ -22,14 +22,19 @@ export function ActivityHistory({ userId }: Props) {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-y-2">
-        {data &&
+        {data && data.length > 0 ? (
           data?.map((record) => (
             <RecordHistory
               key={record.id}
               data={record as RecordWithRelationsProps}
               userId={userId}
             />
-          ))}
+          ))
+        ) : (
+          <div className="py-16 text-center flex items-center justify-center">
+            <p>No data to display</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
