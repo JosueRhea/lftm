@@ -30,8 +30,8 @@ export function Nav() {
   return (
     <motion.nav
       className="w-full grid grid-cols-2 mt-4"
-      layoutRoot
       layout
+      layoutRoot
     >
       {links.map(({ href, name, icon: Icon }) => {
         const isActive = pathname === href;
@@ -39,6 +39,7 @@ export function Nav() {
           <MotionLink
             href={href}
             className={`text-primary relative text-center w-full h-10 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background`}
+            key={href}
             replace={true}
           >
             <Icon className="w-4 h-4 mr-2" />
