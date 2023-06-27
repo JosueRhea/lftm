@@ -8,10 +8,10 @@ interface Props {
 }
 
 export function Header({ avatar, username }: Props) {
-  const avatarFallback = username ? username[0] : "NA"
+  const avatarFallback = username ? username[0] : "NA";
 
   return (
-    <header className="mt-4 flex items-center justify-between">
+    <header className="flex items-center pt-2 justify-between sticky top-0 bg-background/60 z-20 backdrop-blur-lg">
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight flex gap-x-2 items-center">
         <span>lftm</span> <Badge>Beta</Badge>
       </h3>
