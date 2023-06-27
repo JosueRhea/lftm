@@ -7,6 +7,7 @@ import { useCurrentActivity } from "@/hooks/use-current-activity";
 import { Skeleton } from "./ui/skeleton";
 import { Counter } from "./counter";
 import { useDb } from "@/hooks/use-db";
+import { RecordWithRelationsProps } from "@/types/db";
 
 interface Props {
   userId: string;
@@ -19,7 +20,7 @@ export function CurrentActivity({ userId }: Props) {
     error,
     isLoading,
     invalidate,
-    isRefetching,
+    stopActivity,
   } = useCurrentActivity({ userId });
 
   useEffect(() => {
@@ -35,21 +36,7 @@ export function CurrentActivity({ userId }: Props) {
     };
   }, []);
 
-  const handleOnStop = async () => {
-    if (!res?.data?.id) return;
-    const { error } = await stopRecord(client, {
-      userId,
-      currentRecordId: res.data?.id,
-    });
-
-    if (error) {
-      console.error(error);
-      return;
-    }
-    invalidate();
-  };
-
-  if ((isLoading && !res) || isRefetching) {
+  if (isLoading && !res) {
     return (
       <div className="w-full flex flex-col items-center">
         <Skeleton className="h-10 w-64 rounded-md" />
@@ -61,12 +48,18 @@ export function CurrentActivity({ userId }: Props) {
     );
   }
 
+  const handleOnStop = async () => {
+    if (!res?.id || res.id.length <= 0) return;
+
+    stopActivity({ record: res as RecordWithRelationsProps });
+  };
+
   return (
     <div className="w-full flex flex-col items-center">
       {res && !error ? (
         <>
-          <Counter startDate={new Date(res.data?.created_at as string)} />
-          <p className="text-xl">{res.data?.activity?.name}</p>
+          <Counter startDate={new Date(res.created_at as string)} />
+          <p className="text-xl">{res.activity?.name}</p>
           <div className="flex gap-x-2 mt-2">
             <Button onClick={handleOnStop}>
               <StopCircle className="w-4 h-4 mr-2" />

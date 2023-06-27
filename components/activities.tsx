@@ -64,7 +64,7 @@ export function Activities({ activities, userId }: Props) {
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
         <ActivitiesList
           userId={userId}
-          currentActivityId={data?.data?.activity?.id ?? null}
+          currentActivityId={data?.activity?.id ?? null}
         />
       </div>
     </div>

@@ -14,7 +14,7 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
   }
 
   const activities = data?.activity ?? [];
-  
+
   return (
     <>
       {error == null &&
@@ -31,10 +31,11 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
               data={activity}
               disabled={isDisabled}
               isActive={isActive}
+              userId={userId}
             />
           );
         })}
-      <Activity isPlus={true} />
+      <Activity isPlus={true} userId={userId} />
     </>
   );
 }

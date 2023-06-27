@@ -48,21 +48,31 @@ export async function getCurrentActivity(
   client: SupabaseClient<Database>,
   { userId }: { userId: string }
 ) {
-  const { data } = await client
+  const currentActivity = await client
     .from("profiles")
     .select("current_activity")
     .eq("id", userId)
     .single()
     .throwOnError();
 
-  if (data?.current_activity == null) return null;
+  if (currentActivity.error) {
+    throw new Error("Something went wrong");
+  }
 
-  return await client
+  if (currentActivity.data.current_activity == null) return null;
+
+  const activityData = await client
     .from("record")
     .select("*, activity(*)")
-    .eq("id", data?.current_activity)
+    .eq("id", currentActivity.data.current_activity)
     .single()
     .throwOnError();
+
+  if (activityData.error) {
+    throw new Error("Something went wrong");
+  }
+
+  return activityData.data;
 }
 
 export function suscribeToCurrentUserData(

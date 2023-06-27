@@ -3,14 +3,14 @@ import { Button } from "./ui/button";
 import { AddActivity } from "./add-activity";
 import { ActivityProps } from "@/types/db";
 import { iconsKV } from "@/data/icons";
-import { createRecord } from "@/services/activity";
-import { useDb } from "@/hooks/use-db";
+import { useCurrentActivity } from "@/hooks/use-current-activity";
 
 type Props = {
   isPlus?: boolean;
   isActive?: boolean;
   disabled?: boolean;
   data?: ActivityProps;
+  userId: string;
 };
 
 export function Activity({
@@ -18,40 +18,26 @@ export function Activity({
   isActive = false,
   disabled = false,
   data,
+  userId,
 }: Props) {
-  const { client } = useDb();
-  
+  const { startActivity } = useCurrentActivity({ userId });
+
   if (isPlus) {
     return <AddActivity />;
   }
+
+  if (!data) return null;
 
   const name = data?.name;
   const icon = data?.icon as string;
 
   const IconComp = iconsKV[icon];
 
-  const handleOnClick = async () => {
-    const {
-      data: { session },
-    } = await client.auth.getSession();
-
-    if (!session) return;
-
-    const { error } = await createRecord(client, {
-      activityId: data?.id as string,
-      userId: session.user.id,
-    });
-
-    if (!error) {
-      console.log("record created");
-    }
-  };
-
   return (
     <Button
       className={`w-full ${isActive ? "border-primary" : ""}`}
       variant={"outline"}
-      onClick={disabled ? undefined : handleOnClick}
+      onClick={disabled ? undefined : () => startActivity({ activity: data })}
       disabled={disabled}
     >
       <IconComp
