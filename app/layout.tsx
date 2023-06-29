@@ -15,13 +15,9 @@ export const metadata: Metadata = {
   title: "lftm",
   description: "Track your habits and goals.",
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
-    other: {
-      rel: "apple-touch-icon-precomposed",
-      url: "/logo.png",
-    },
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
 };
 
