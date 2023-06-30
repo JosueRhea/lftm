@@ -48,14 +48,14 @@ export function Activity({
   const IconComp = iconsKV[icon];
 
   return (
-    <Button
+    <button
       className={cn(
-        "w-full h-28 relative flex flex-col justify-between items-start text-left",
+        "w-full h-28 relative flex flex-col justify-between items-start text-left rounded-md py-2 px-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
         isActive
           ? "pointer-events-none bg-primary text-primary-foreground"
           : "bg-secondary"
       )}
-      variant={"ghost"}
+      // variant={"ghost"}
       onClick={disabled ? undefined : () => startActivity({ activity: data })}
       disabled={disabled && !isActive}
     >
@@ -103,6 +103,6 @@ export function Activity({
           </>
         )}
       </div>
-    </Button>
+    </button>
   );
 }
