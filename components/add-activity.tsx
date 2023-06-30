@@ -78,9 +78,11 @@ export function AddActivity() {
       }}
     >
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add
+        <Button className="h-full" variant="outline">
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            New
+          </h4>
+          <Plus className="h-4 w-4 ml-2" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

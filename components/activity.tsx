@@ -4,6 +4,10 @@ import { AddActivity } from "./add-activity";
 import { ActivityProps } from "@/types/db";
 import { iconsKV } from "@/data/icons";
 import { useCurrentActivity } from "@/hooks/use-current-activity";
+import { cn } from "@/lib/utils";
+import { useMyActivity } from "@/hooks/use-my-activity";
+import { Progress } from "./ui/progress";
+import { Skeleton } from "./ui/skeleton";
 
 type Props = {
   isPlus?: boolean;
@@ -21,12 +25,22 @@ export function Activity({
   userId,
 }: Props) {
   const { startActivity } = useCurrentActivity({ userId });
+  const { data: myActivity, isLoading } = useMyActivity({ userId });
 
   if (isPlus) {
     return <AddActivity />;
   }
 
   if (!data) return null;
+
+  const currentActivity = myActivity?.records.find(
+    (n) => n.activity_id == data.id
+  );
+
+  const progressValue =
+    currentActivity && myActivity?.totalCount
+      ? Math.floor((currentActivity.counter / myActivity?.totalCount) * 100)
+      : null;
 
   const name = data?.name;
   const icon = data?.icon as string;
@@ -35,17 +49,60 @@ export function Activity({
 
   return (
     <Button
-      className={`w-full ${isActive ? "border-primary" : ""}`}
-      variant={"outline"}
+      className={cn(
+        "w-full h-28 relative flex flex-col justify-between items-start text-left",
+        isActive
+          ? "pointer-events-none bg-primary text-primary-foreground"
+          : "bg-secondary"
+      )}
+      variant={"ghost"}
       onClick={disabled ? undefined : () => startActivity({ activity: data })}
-      disabled={disabled}
+      disabled={disabled && !isActive}
     >
-      <IconComp
-        className={`w-4 h-4 mr-2 ${
-          isActive ? "animate-bounce" : "animate-none"
-        }`}
-      />
-      {name}
+      <div className="w-full flex justify-between items-center">
+        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+          {name}
+        </h4>
+        <IconComp className={"w-4 h-4"} />
+      </div>
+      <div className="w-full h-fit">
+        {isLoading ? (
+          <>
+            <Skeleton
+              className={cn(
+                "w-full h-2 mb-1 bg-primary/40",
+                isActive && "bg-primary-foreground"
+              )}
+            />
+            <Skeleton
+              className={cn(
+                "w-3/6 h-2 mb-1 bg-primary/40",
+                isActive && "bg-primary-foreground"
+              )}
+            />
+          </>
+        ) : (
+          <>
+            <Progress
+              className={cn("h-2 mb-1", isActive && "bg-secondary/30")}
+              value={progressValue}
+              indicatorClassname={cn(isActive && "bg-primary-foreground")}
+            />
+            <p
+              className={cn(
+                "text-sm",
+                isActive
+                  ? "text-primary-foreground"
+                  : "text-secondary-foreground"
+              )}
+            >
+              {progressValue
+                ? progressValue + "%" + " today"
+                : "No tracked today"}
+            </p>
+          </>
+        )}
+      </div>
     </Button>
   );
 }

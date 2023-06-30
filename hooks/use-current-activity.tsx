@@ -63,7 +63,7 @@ export function useCurrentActivity({ userId }: Props) {
       queryClient.setQueryData(key, context?.previousRecords);
     },
     onSettled: () => {
-      queryClient.invalidateQueries(key);
+      queryClient.invalidateQueries();
     },
   });
 
