@@ -60,7 +60,7 @@ function DesktopNav({ pathname }: { pathname: string }) {
 
 function MobileNav({ pathname }: { pathname: string }) {
   return (
-    <nav className="w-full h-fit grid grid-cols-2 sm:hidden fixed bottom-0 bg-background/80 backdrop-blur-md z-50 right-0 left-0">
+    <nav className="w-full h-fit grid grid-cols-2 sm:hidden fixed bottom-0 bg-background/80 backdrop-blur-sm z-50 right-0 left-0">
       {links.map(({ href, name, icon: Icon }) => {
         const isActive = pathname === href;
         return (
