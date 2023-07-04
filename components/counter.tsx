@@ -118,13 +118,19 @@ function IddleCounter() {
 
 export function Counter({ record, stopCounter }: Props) {
   const isCounterRunning = record != null;
+  const radius = isCounterRunning ? 12 : 100;
   return (
     <motion.div
       className={cn(
-        "w-full flex items-center justify-center bg-primary max-5/6 max-w-xs text-primary-foreground py-2 px-4",
-        isCounterRunning ? "rounded-xl" : "rounded-full"
+        "w-full flex items-center justify-center bg-primary max-5/6 max-w-xs text-primary-foreground py-2 px-4"
       )}
       layout
+      animate={{
+        borderRadius: radius,
+        transition: {
+          duration: 1,
+        },
+      }}
     >
       {record ? (
         <RunningCounter
