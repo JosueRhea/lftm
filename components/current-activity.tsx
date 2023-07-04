@@ -55,25 +55,12 @@ export function CurrentActivity({ userId }: Props) {
   };
 
   return (
-    <div className="w-full flex flex-col items-center">
-      {res && !error ? (
-        <>
-          <Counter startDate={new Date(res.created_at as string)} />
-          <p className="text-xl">{res.activity?.name}</p>
-          <div className="flex gap-x-2 mt-2">
-            <Button onClick={handleOnStop}>
-              <StopCircle className="w-4 h-4 mr-2" />
-              Stop
-            </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <p className="text-4xl">0: 00: 00</p>
-          <p className="mt-4">
-            No activity yet. <strong>Start one!</strong>
-          </p>
-        </>
+    <div className="w-full flex flex-col items-center my-10">
+      {!error && (
+        <Counter
+          record={(res as RecordWithRelationsProps) ?? undefined}
+          stopCounter={handleOnStop}
+        />
       )}
     </div>
   );
