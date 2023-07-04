@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 import Providers from "@/lib/provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Metadata } from "next";
-import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,14 +42,6 @@ export default async function RootLayout({
               <Nav />
               {shouldShowLogin ? <Login /> : children}
             </Providers>
-            <Image
-              src="/gradient.png"
-              alt="gradient"
-              width={500}
-              height={600}
-              className="fixed bottom-0 right-0 left-0 w-full -z-10 opacity-10"
-              priority
-            />
           </main>
         </ThemeProvider>
       </body>
