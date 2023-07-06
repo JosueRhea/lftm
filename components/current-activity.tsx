@@ -39,11 +39,7 @@ export function CurrentActivity({ userId }: Props) {
   if (isLoading && !res) {
     return (
       <div className="w-full flex flex-col items-center">
-        <Skeleton className="h-10 w-64 rounded-md" />
-        <Skeleton className="h-6 mt-2 w-52 rounded-md" />
-        <div className="flex gap-x-2 mt-2">
-          <Skeleton className="h-10 w-64 rounded-md" />
-        </div>
+        <Skeleton className="h-10 w-full max-w-xs rounded-full" />
       </div>
     );
   }

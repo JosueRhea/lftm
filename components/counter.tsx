@@ -122,14 +122,16 @@ export function Counter({ record, stopCounter }: Props) {
   return (
     <motion.div
       className={cn(
-        "w-full flex items-center justify-center bg-primary max-5/6 max-w-xs text-primary-foreground py-2 px-4"
+        "w-full flex items-center justify-center bg-primary max-w-xs text-primary-foreground py-2 px-4"
       )}
       layout
       animate={{
         borderRadius: radius,
-        transition: {
-          duration: 1,
-        },
+      }}
+      transition={{
+        duration: 0.5,
+        type: "spring",
+        stiffness: 75,
       }}
     >
       {record ? (
