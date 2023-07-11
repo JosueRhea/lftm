@@ -1,5 +1,6 @@
-import { Database } from "@/types/db";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "./types";
+
 
 export async function getUserData(
   client: SupabaseClient<Database>,

@@ -5,9 +5,9 @@ import { Terminal } from "lucide-react";
 import { useCurrentActivity } from "@/hooks/use-current-activity";
 import { Skeleton } from "./ui/skeleton";
 import { useEffect } from "react";
-import { suscribeToCurrentUserData } from "@/services/activity";
 import { useDb } from "@/hooks/use-db";
 import { ActivitiesList } from "./activities-list";
+import { suscribeToCurrentUserData } from "@lftm/api";
 
 interface Props {
   activities: ActivityProps[];

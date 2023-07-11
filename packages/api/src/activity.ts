@@ -1,14 +1,14 @@
 import {
-  createDayDatesArray,
-  getCounterFromStartAndEndDate,
-  sumTwoCounters,
-} from "@/lib/date";
-import {
   Database,
   RecordWithCounterProps,
   RecordWithRelationsProps,
   TimeSpendProps,
-} from "@/types/db";
+} from "./types";
+import {
+  createDayDatesArray,
+  getCounterFromStartAndEndDate,
+  sumTwoCounters,
+} from "./lib/date";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export function suscribeToActivityChanges(

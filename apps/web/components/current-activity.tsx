@@ -1,13 +1,11 @@
 "use client";
-import { StopCircle } from "lucide-react";
-import { Button } from "./ui/button";
 import { useEffect } from "react";
-import { stopRecord, suscribeToCurrentUserData } from "@/services/activity";
 import { useCurrentActivity } from "@/hooks/use-current-activity";
 import { Skeleton } from "./ui/skeleton";
 import { Counter } from "./counter";
 import { useDb } from "@/hooks/use-db";
 import { RecordWithRelationsProps } from "@/types/db";
+import { suscribeToCurrentUserData } from "@lftm/api";
 
 interface Props {
   userId: string;

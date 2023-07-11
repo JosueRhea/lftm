@@ -1,11 +1,7 @@
-import {
-  createRecord,
-  getCurrentActivity,
-  stopRecord,
-} from "@/services/activity";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDb } from "./use-db";
 import { ActivityProps, RecordWithRelationsProps } from "@/types/db";
+import { createRecord, getCurrentActivity, stopRecord } from "@lftm/api";
 
 interface Props {
   userId: string;

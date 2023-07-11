@@ -1,6 +1,6 @@
-import { getUserData } from "@/services/user";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDb } from "./use-db";
+import { getUserData } from "@lftm/api";
 
 interface Props {
   userId?: string;

@@ -1,9 +1,9 @@
-import { get7dRecords } from "@/services/activity";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDb } from "./use-db";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useActivities } from "./use-activities";
 import { useEffect, useState } from "react";
+import { get7dRecords } from "@lftm/api";
 
 interface Props {
   userId: string;

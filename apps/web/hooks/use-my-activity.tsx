@@ -1,7 +1,7 @@
-import { get24hRecords } from "@/services/activity";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDb } from "./use-db";
+import { get24hRecords } from "@lftm/api";
 
 interface Props {
   userId: string;

@@ -13,12 +13,10 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { FormEvent, useRef, useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { AlertCircle } from "lucide-react";
-import { createActivity } from "@/services/activity";
 import { useDb } from "@/hooks/use-db";
 import { useActivities } from "@/hooks/use-activities";
 import { FormErrors } from "./form-errors";
+import { createActivity } from "@lftm/api";
 
 export function AddActivity() {
   const [open, setOpen] = useState(false);

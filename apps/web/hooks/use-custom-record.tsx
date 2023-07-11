@@ -1,9 +1,6 @@
 import { toDatetimeLocal } from "@/lib/date";
 import { RecordWithRelationsProps } from "@/types/db";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDb } from "./use-db";
-import { updateRecordActivity } from "@/services/activity";
 
 interface Props {
   record: RecordWithRelationsProps;
