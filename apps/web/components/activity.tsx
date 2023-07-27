@@ -39,7 +39,7 @@ export function Activity({
 
   const progressValue =
     currentActivity && myActivity?.totalCount
-      ? Math.floor((currentActivity.counter / myActivity?.totalCount) * 100)
+      ? Math.floor((currentActivity.counter / 24) * 100)
       : null;
 
   const name = data?.name;

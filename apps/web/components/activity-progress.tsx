@@ -27,7 +27,7 @@ export function ActivityProgress({
 
   const isActive = index === selectedIndex;
 
-  const rounded = Math.floor((value / totalCount) * 100);
+  const rounded = Math.floor((value / 24) * 100);
   return (
     <div
       className={cn("w-full flex gap-x-2 items-end", !isActive && "opacity-50")}

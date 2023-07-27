@@ -49,7 +49,7 @@ export function CurrentActivity({ userId }: Props) {
   };
 
   return (
-    <div className="w-full flex flex-col items-center my-10">
+    <div className="w-full flex flex-col items-center my-4">
       {!error && (
         <Counter
           record={(res as RecordWithRelationsProps) ?? undefined}

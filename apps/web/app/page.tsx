@@ -20,7 +20,7 @@ export default async function Home() {
   const userId = session?.user.id as string;
 
   return (
-    <div className="mt-12 pb-16">
+    <div className="mt-4 pb-20">
       <CurrentActivity userId={userId} />
       <div className="mt-4">
         <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
