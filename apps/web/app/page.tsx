@@ -1,7 +1,7 @@
 import { Activities } from "@/components/activities";
 import { CurrentActivity } from "@/components/current-activity";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getActivities, getUserData } from "@lftm/api";
+import { getActivities } from "@lftm/api";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AlertCircle } from "lucide-react";
 import { cookies } from "next/headers";

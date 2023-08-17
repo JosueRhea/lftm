@@ -45,6 +45,7 @@ export function useActivityHistory({ userId }: Props) {
 
   const { mutate: updateRecordMut } = useMutation({
     mutationFn: async (newRecord: RecordWithRelationsProps) => {
+      // @ts-ignore
       await updateRecordActivity(client, { record: newRecord });
     },
     onMutate: async (newRecord: RecordWithRelationsProps) => {
