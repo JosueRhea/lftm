@@ -22,7 +22,7 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
     );
   }
 
-  const activities = data?.activity ?? [];
+  const activities = data ?? [];
 
   return (
     <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">

@@ -1,7 +1,7 @@
 import { Activities } from "@/components/activities";
 import { CurrentActivity } from "@/components/current-activity";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getUserData } from "@lftm/api";
+import { getActivities, getUserData } from "@lftm/api";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AlertCircle } from "lucide-react";
 import { cookies } from "next/headers";
@@ -11,13 +11,15 @@ export default async function Home() {
   const {
     data: { session },
   } = await client.auth.getSession();
-  const { data, error } = await getUserData(client, {
-    userId: session?.user.id as string,
-  });
-
-  const activities = data?.activity || [];
-
   const userId = session?.user.id as string;
+  // const { data, error } = await getUserData(client, {
+  //   userId,
+  // });
+
+  const { data: activitiesData, error: activitiesError } = await getActivities(client, { userId })
+
+  const activities = activitiesData || [];
+
 
   return (
     <div className="mt-4 pb-20">
@@ -26,14 +28,14 @@ export default async function Home() {
         <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
           Activities
         </h3>
-        {error && (
+        {activitiesError && (
           <Alert variant="destructive" className="mt-4">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
+            <AlertDescription>{activitiesError.message}</AlertDescription>
           </Alert>
         )}
-        {!error && <Activities activities={activities} userId={userId} />}
+        {!activitiesError && <Activities activities={activities} userId={userId} />}
       </div>
     </div>
   );

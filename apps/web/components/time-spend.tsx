@@ -1,6 +1,5 @@
 "use client";
 
-import { useActivities } from "@/hooks/use-activities";
 import { TimeSpendChart } from "./time-spend-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useTimeSpend } from "@/hooks/use-time-spend";

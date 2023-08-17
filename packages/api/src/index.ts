@@ -11,4 +11,4 @@ export {
   suscribeToCurrentUserData,
   updateRecordActivity,
 } from "./activity";
-export { getUserData } from "./user";
+export { getUserData, getActivities } from "./user";

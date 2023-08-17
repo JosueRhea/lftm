@@ -122,6 +122,10 @@ export async function createRecord(
 
   if (recordData.error) return recordData;
 
+  const activityData = await client.from("activity").update({ updated_at: new Date().toISOString() }).eq("id", activityId)
+
+  if (activityData.error) return activityData;
+
   return await client
     .from("profiles")
     .update({
@@ -237,6 +241,7 @@ export async function get24hRecords(
         id: "untracked",
         name: "untracked",
         user_id: "untracked",
+        updated_at: "untracked"
       },
       activity_id: "untracked",
       counter: untrackedHours,

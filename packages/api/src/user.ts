@@ -14,6 +14,10 @@ export async function getUserData(
     .throwOnError();
 }
 
+export async function getActivities(client: SupabaseClient<Database>, { userId }: { userId: string }) {
+  return await client.from("activity").select("*").order("updated_at", { ascending: false }).eq("user_id", userId)
+}
+
 // export async function updateUserData(
 //   client: SupabaseClient<Database>,
 //   { userId, data }: { userId: string; data: any }

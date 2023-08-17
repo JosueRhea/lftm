@@ -13,8 +13,8 @@ export const useTimeSpend = ({ userId }: Props) => {
   const { client } = useDb();
   const { data: activities } = useActivities({ userId });
   const [selectedActivity, setSelectedActivity] = useState(
-    activities && activities?.activity.length > 0
-      ? activities?.activity[0].id
+    activities && activities?.length > 0
+      ? activities?.[0].id
       : null
   );
   const { data, error, isLoading, isRefetching } = useQuery({
@@ -32,8 +32,8 @@ export const useTimeSpend = ({ userId }: Props) => {
 
   useEffect(() => {
     setSelectedActivity(
-      activities && activities?.activity.length > 0
-        ? activities?.activity[0].id
+      activities && activities?.length > 0
+        ? activities?.[0].id
         : null
     );
   }, [activities]);
@@ -58,6 +58,6 @@ export const useTimeSpend = ({ userId }: Props) => {
     invalidate,
     onActivityChange,
     selectedActivity,
-    activities: activities?.activity ?? null,
+    activities: activities ?? null,
   };
 };
