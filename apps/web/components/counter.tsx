@@ -4,7 +4,7 @@ import { getCounterFromStartDate } from "@/lib/date";
 import { cn } from "@/lib/utils";
 import { RecordWithRelationsProps } from "@/types/db";
 import { AnimatePresence, motion } from "framer-motion";
-import { StopCircle, Triangle } from "lucide-react";
+import { StopCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
@@ -16,7 +16,7 @@ interface Props {
 function Digit({
   value,
   keyVal,
-  type,
+  type
 }: {
   value: number;
   keyVal: any;
@@ -88,17 +88,17 @@ function RunningCounter({
         </TooltipProvider>
         <div className="flex gap-x-2">
           {parsedDate.days > 0 && (
-            <Digit keyVal={parsedDate.days} value={parsedDate.days} type="d" />
+            <Digit keyVal={`${record.id}-${parsedDate.days}`} value={parsedDate.days} type="d" />
           )}
-          <Digit keyVal={parsedDate.hours} value={parsedDate.hours} type="h" />
+          <Digit keyVal={`${record.id}-${parsedDate.days}`} value={parsedDate.hours} type="h" />
           <Digit
-            keyVal={parsedDate.minutes}
+            keyVal={`${record.id}-${parsedDate.days}`}
             value={parsedDate.minutes}
             type="m"
           />
           {parsedDate.days === 0 && (
             <Digit
-              keyVal={parsedDate.seconds}
+              keyVal={`${record.id}-${parsedDate.days}`}
               value={parsedDate.seconds}
               type="s"
             />

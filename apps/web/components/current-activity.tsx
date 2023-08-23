@@ -57,6 +57,7 @@ export function CurrentActivity({ userId }: Props) {
             <Counter
               record={(record as RecordWithRelationsProps) ?? undefined}
               stopCounter={handleOnStop}
+              key={record.id}
             />
           ))}
         </div>
