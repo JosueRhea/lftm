@@ -31,7 +31,9 @@ export function useCurrentActivity({ userId }: Props) {
       await queryClient.cancelQueries();
       const previousRecords = queryClient.getQueryData(key);
 
-      queryClient.setQueryData(key, record);
+      if(previousRecords && Array.isArray(previousRecords)){
+        queryClient.setQueryData(key, [...previousRecords, record]);
+      }
       return { previousRecords };
     },
     onError: (_, __, context) => {
@@ -49,10 +51,15 @@ export function useCurrentActivity({ userId }: Props) {
         currentRecordId: record.id,
       });
     },
-    onMutate: async () => {
+    onMutate: async ({record}) => {
       await queryClient.cancelQueries();
       const previousRecords = queryClient.getQueryData(key);
-      queryClient.setQueryData(key, null);
+
+      if(previousRecords && Array.isArray(previousRecords)){
+        const newRecords = previousRecords.filter((rcord)=> rcord.id != record.id)
+        queryClient.setQueryData(key, newRecords);
+      }
+      
       return { previousRecords };
     },
     onError: (_, __, context) => {

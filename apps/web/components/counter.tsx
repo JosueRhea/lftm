@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 interface Props {
   record?: RecordWithRelationsProps;
-  stopCounter: () => void;
+  stopCounter: (record: RecordWithRelationsProps) => void;
 }
 
 function Digit({
@@ -45,12 +45,14 @@ function RunningCounter({
   startDate,
   icon,
   name,
+  record,
   stopCounter,
 }: {
   startDate: Date;
   name: string;
   icon: string;
-  stopCounter: () => void;
+  record: RecordWithRelationsProps,
+  stopCounter: (record: RecordWithRelationsProps) => void;
 }) {
   const [parsedDate, setParsedDate] = useState(
     getCounterFromStartDate(startDate)
@@ -72,7 +74,7 @@ function RunningCounter({
       <div className="w-full flex justify-between items-center">
         <button
           className="rounded-full bg-red-400/20 hover:bg-red-400/30 p-2 transition-colors duration-200"
-          onClick={stopCounter}
+          onClick={()=> stopCounter(record)}
         >
           <StopCircle className="w-6 h-6 stroke-red-400" />
         </button>
@@ -140,6 +142,7 @@ export function Counter({ record, stopCounter }: Props) {
           name={record.activity.name}
           icon={record.activity.icon}
           stopCounter={stopCounter}
+          record={record}
         />
       ) : (
         <IddleCounter />

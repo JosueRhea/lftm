@@ -48,24 +48,24 @@ export async function getCurrentActivity(
   client: SupabaseClient<Database>,
   { userId }: { userId: string }
 ) {
-  const currentActivity = await client
-    .from("profiles")
-    .select("current_activity")
-    .eq("id", userId)
-    .single()
-    .throwOnError();
+  // const currentActivity = await client
+  //   .from("profiles")
+  //   .select("current_activity")
+  //   .eq("id", userId)
+  //   .single()
+  //   .throwOnError();
 
-  if (currentActivity.error) {
-    throw new Error("Something went wrong");
-  }
+  // if (currentActivity.error) {
+  //   throw new Error("Something went wrong");
+  // }
 
-  if (currentActivity.data.current_activity == null) return null;
+  // if (currentActivity.data.current_activity == null) return null;
 
   const activityData = await client
     .from("record")
     .select("*, activity(*)")
-    .eq("id", currentActivity.data.current_activity)
-    .single()
+    .eq("user_id", userId)
+    .is("end_date", null)
     .throwOnError();
 
   if (activityData.error) {
@@ -90,10 +90,10 @@ export function suscribeToCurrentUserData(
   const channel = client.channel(tag).on(
     "postgres_changes",
     {
-      event: "UPDATE",
+      event: "*",
       schema: "public",
-      table: "profiles",
-      filter: `id=eq.${userId}`,
+      table: "record",
+      filter: `user_id=eq.${userId}`,
     },
     callback
   );
@@ -122,7 +122,10 @@ export async function createRecord(
 
   if (recordData.error) return recordData;
 
-  const activityData = await client.from("activity").update({ updated_at: new Date().toISOString() }).eq("id", activityId)
+  const activityData = await client
+    .from("activity")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", activityId);
 
   if (activityData.error) return activityData;
 
@@ -241,7 +244,7 @@ export async function get24hRecords(
         id: "untracked",
         name: "untracked",
         user_id: "untracked",
-        updated_at: "untracked"
+        updated_at: "untracked",
       },
       activity_id: "untracked",
       counter: untrackedHours,

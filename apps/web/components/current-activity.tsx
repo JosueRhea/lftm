@@ -28,7 +28,8 @@ export function CurrentActivity({ userId }: Props) {
         invalidate();
       },
       tag: "current-activity-subscription",
-    }).subscribe(() => {});
+    }).subscribe(() => { 
+    });
     return () => {
       channel.unsubscribe();
     };
@@ -42,19 +43,23 @@ export function CurrentActivity({ userId }: Props) {
     );
   }
 
-  const handleOnStop = async () => {
-    if (!res?.id || res.id.length <= 0) return;
+  const handleOnStop = async (record: RecordWithRelationsProps) => {
+    if (!record?.id || record.id.length <= 0) return;
 
-    stopActivity({ record: res as RecordWithRelationsProps });
+    stopActivity({ record: record });
   };
 
   return (
     <div className="w-full flex flex-col items-center my-4">
-      {!error && (
-        <Counter
-          record={(res as RecordWithRelationsProps) ?? undefined}
-          stopCounter={handleOnStop}
-        />
+      {!error && res && (
+        <>
+          {res.map((record) => (
+            <Counter
+              record={(record as RecordWithRelationsProps) ?? undefined}
+              stopCounter={handleOnStop}
+            />
+          ))}
+        </>
       )}
     </div>
   );

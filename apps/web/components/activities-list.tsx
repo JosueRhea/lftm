@@ -4,7 +4,7 @@ import { Skeleton } from "./ui/skeleton";
 
 interface Props {
   userId: string;
-  currentActivityId: string | null;
+  currentActivityId: string[] | null;
 }
 
 export function ActivitiesList({ userId, currentActivityId }: Props) {
@@ -29,16 +29,16 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
       {error == null &&
         activities.map((activity) => {
           const isActive =
-            currentActivityId != null && activity.id == currentActivityId;
-          const isDisabled =
-            (currentActivityId != null && activity.id != currentActivityId) ||
-            isActive;
+            currentActivityId != null &&  currentActivityId.includes(activity.id);
+          // const isDisabled =
+          //   (currentActivityId != null && activity.id != currentActivityId) ||
+          //   isActive;
 
           return (
             <Activity
               key={activity.id}
               data={activity}
-              disabled={isDisabled}
+              disabled={isActive}
               isActive={isActive}
               userId={userId}
             />

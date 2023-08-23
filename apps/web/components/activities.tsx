@@ -64,7 +64,7 @@ export function Activities({ activities, userId }: Props) {
 
       <ActivitiesList
         userId={userId}
-        currentActivityId={data?.activity?.id ?? null}
+        currentActivityId={data ? data.map((record)=> record.activity_id as string) : null}
       />
     </div>
   );
