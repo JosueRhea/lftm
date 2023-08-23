@@ -50,16 +50,19 @@ export function CurrentActivity({ userId }: Props) {
   };
 
   return (
-    <div className="w-full flex flex-col items-center my-4">
+    <div className="w-full">
       {!error && res && (
-        <>
-          {res.map((record) => (
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 my-4 gap-2">
+          {res.length > 0 && res.map((record) => (
             <Counter
               record={(record as RecordWithRelationsProps) ?? undefined}
               stopCounter={handleOnStop}
             />
           ))}
-        </>
+        </div>
+      )}
+      {res && res.length <= 0 && (
+        <p className="text-center">Start a new activity</p>
       )}
     </div>
   );
