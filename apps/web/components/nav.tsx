@@ -67,7 +67,7 @@ function MobileNav({ pathname }: { pathname: string }) {
           <Link
             href={href}
             className={cn(
-              `text-primary relative text-center w-full h-16 flex flex-col items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border-t border-muted`,
+              `text-foreground relative text-center w-full h-16 flex flex-col items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border-t border-muted`,
               !isActive ? "opacity-60" : ""
             )}
             key={href}

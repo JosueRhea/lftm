@@ -21,7 +21,7 @@ const renderActiveShape = (props: any) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={0} textAnchor="middle" className="fill-primary">
+      <text x={cx} y={cy} dy={0} textAnchor="middle" className="fill-foreground">
         {payload.activity.name}
       </text>
       {payload.counterTime && (
@@ -30,7 +30,7 @@ const renderActiveShape = (props: any) => {
           y={cy}
           dy={16}
           textAnchor="middle"
-          className="fill-primary"
+          className="fill-foreground"
         >
           {payload.counterTime.hours +
             "h" +

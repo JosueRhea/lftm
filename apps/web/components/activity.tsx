@@ -70,23 +70,23 @@ export function Activity({
           <>
             <Skeleton
               className={cn(
-                "w-full h-2 mb-1 bg-primary/40",
-                isActive && "bg-primary-foreground"
+                "w-full h-2 mb-1 bg-muted-foreground/50",
+                isActive && "bg-muted-foreground/20"
               )}
             />
             <Skeleton
               className={cn(
-                "w-3/6 h-2 mb-1 bg-primary/40",
-                isActive && "bg-primary-foreground"
+                "w-3/6 h-2 mb-1 bg-muted-foreground/50",
+                isActive && "bg-muted-foreground/20"
               )}
             />
           </>
         ) : (
           <>
             <Progress
-              className={cn("h-2 mb-1", isActive && "bg-secondary/30")}
+              className={cn("h-2 mb-1 bg-muted-foreground/10", isActive && "bg-secondary/30")}
               value={progressValue}
-              indicatorClassname={cn(isActive && "bg-primary-foreground")}
+              indicatorClassname={cn("bg-secondary-foreground")}
             />
             <p
               className={cn(

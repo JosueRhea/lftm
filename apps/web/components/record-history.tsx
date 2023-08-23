@@ -22,6 +22,7 @@ import {
 import { useActivityHistory } from "@/hooks/use-activity-history";
 import { CustomRecord } from "./custom-record";
 import { useState } from "react";
+import { ConfirmDialog } from "./confirm-dialog";
 
 interface Props {
   data: RecordWithRelationsProps;
@@ -31,6 +32,7 @@ interface Props {
 export function RecordHistory({ data, userId }: Props) {
   const { deleteRecord } = useActivityHistory({ userId });
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDeleteConf, setOpenDeleteConf] = useState(false);
 
   const IconComp = iconsKV[data.activity.icon];
   const name = data.activity.name;
@@ -41,7 +43,9 @@ export function RecordHistory({ data, userId }: Props) {
   return (
     <div className="flex items-center w-full space-x-4 rounded-md border p-4">
       <div className="flex w-full items-center space-x-4">
-        {IconComp && <IconComp className="w-6 h-6 stroke-primary" />}
+        {IconComp && (
+          <IconComp className="w-6 h-6 stroke-secondary-foreground" />
+        )}
         <div className="flex flex-col gap-y-1">
           <p className="text-base font-medium leading-none">{name}</p>
           <p className="text-sm leading-none text-muted-foreground">
@@ -61,7 +65,7 @@ export function RecordHistory({ data, userId }: Props) {
                 disabled={isCurrentActivity}
               >
                 <TooltipTrigger asChild>
-                  <MoreVertical className="w-6 h-6 stroke-primary" />
+                  <MoreVertical className="w-6 h-6 stroke-secondary-foreground" />
                 </TooltipTrigger>
               </Button>
             </DropdownMenuTrigger>
@@ -77,11 +81,7 @@ export function RecordHistory({ data, userId }: Props) {
             <Pen className="mr-2 h-4 w-4" />
             <span>Edit</span>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={
-              isCurrentActivity ? undefined : () => deleteRecord(data.id)
-            }
-          >
+          <DropdownMenuItem onClick={() => setOpenDeleteConf(true)}>
             <Trash className="mr-2 h-4 w-4" />
             <span>Remove</span>
           </DropdownMenuItem>
@@ -92,6 +92,13 @@ export function RecordHistory({ data, userId }: Props) {
         onOpenChange={setOpenEdit}
         record={data}
         userId={userId}
+      />
+      <ConfirmDialog
+        isOpen={openDeleteConf}
+        onOpenChange={setOpenDeleteConf}
+        onConfirm={
+          isCurrentActivity ? undefined : () => deleteRecord(data.id)
+        }
       />
     </div>
   );

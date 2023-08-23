@@ -23,7 +23,7 @@ const CTooltip = ({ active, payload, label }: any) => {
     // const value = Math.round(data.counter * 100) / 100;
     // const name = data.activity.name;
     return (
-      <div className="w-36 bg-background text-primary ring-1 ring-muted p-2 h-fit rounded-sm flex flex-col justify-center">
+      <div className="w-36 bg-background text-foreground ring-1 ring-muted p-2 h-fit rounded-sm flex flex-col justify-center">
         {data.counterTime && (
           <div className="w-full flex flex-col items-center">
             <p className="text-sm">{data.formatedDate}</p>
@@ -68,7 +68,8 @@ export const TimeSpendChart = ({ data }: Props) => {
           {data.map((_, index) => (
             <Cell
               cursor="pointer"
-              fill={index === activeIndex ? "#bef264" : "#adfa1d"}
+              // fill={index === activeIndex ? "#bef264" : "#adfa1d"}
+              className="fill-primary"
               key={`cell-${index}`}
             />
           ))}
