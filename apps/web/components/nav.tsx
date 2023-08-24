@@ -38,7 +38,7 @@ function DesktopNav({ pathname }: { pathname: string }) {
         return (
           <MotionLink
             href={href}
-            className={`text-primary relative text-center w-full h-10 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background`}
+            className={`text-foreground relative text-center w-full h-10 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background`}
             key={href}
             replace={true}
           >
