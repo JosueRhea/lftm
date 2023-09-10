@@ -25,6 +25,7 @@ export function useCurrentActivity({ userId }: Props) {
       await createRecord(client, {
         activityId: record.activity.id,
         userId,
+        created_at: record.created_at as string
       });
     },
     onMutate: async ({ record }: { record: RecordWithRelationsProps }) => {
@@ -74,7 +75,7 @@ export function useCurrentActivity({ userId }: Props) {
     const newRecord = {
       activity,
       activity_id: activity.id,
-      created_at: new Date().toISOString(),
+      created_at: new Date().toUTCString(),
       user_id: userId,
       end_date: null,
       id: "",

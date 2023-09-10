@@ -106,9 +106,11 @@ export async function createRecord(
   {
     activityId,
     userId,
+    created_at,
   }: {
     activityId: string;
     userId: string;
+    created_at: string;
   }
 ) {
   const recordData = await client
@@ -116,6 +118,7 @@ export async function createRecord(
     .insert({
       activity_id: activityId,
       user_id: userId,
+      created_at: created_at,
     })
     .select("*")
     .single();
@@ -144,7 +147,7 @@ export async function stopRecord(
   const recordData = await client
     .from("record")
     .update({
-      end_date: new Date().toISOString(),
+      end_date: new Date().toUTCString(),
     })
     .eq("id", currentRecordId);
 

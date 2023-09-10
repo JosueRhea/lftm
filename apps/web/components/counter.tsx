@@ -6,7 +6,12 @@ import { RecordWithRelationsProps } from "@/types/db";
 import { AnimatePresence, motion } from "framer-motion";
 import { StopCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface Props {
   record: RecordWithRelationsProps;
@@ -16,12 +21,13 @@ interface Props {
 function Digit({
   value,
   keyVal,
-  type
+  type,
 }: {
   value: number;
   keyVal: any;
   type: string;
 }) {
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -52,7 +58,7 @@ function RunningCounter({
   startDate: Date;
   name: string;
   icon: string;
-  record: RecordWithRelationsProps,
+  record: RecordWithRelationsProps;
   stopCounter: (record: RecordWithRelationsProps) => void;
 }) {
   const [parsedDate, setParsedDate] = useState(
@@ -88,22 +94,30 @@ function RunningCounter({
         </TooltipProvider>
         <div className="flex gap-x-2">
           {parsedDate.days > 0 && (
-            <Digit keyVal={`${record.id}-${parsedDate.days}`} value={parsedDate.days} type="d" />
+            <Digit
+              keyVal={`${record.id}-${parsedDate.days}`}
+              value={parsedDate.days}
+              type="d"
+            />
           )}
-          <Digit keyVal={`${record.id}-${parsedDate.days}`} value={parsedDate.hours} type="h" />
           <Digit
-            keyVal={`${record.id}-${parsedDate.days}`}
+            keyVal={`${record.id}-${parsedDate.hours}`}
+            value={parsedDate.hours}
+            type="h"
+          />
+          <Digit
+            keyVal={`${record.id}-${parsedDate.minutes}`}
             value={parsedDate.minutes}
             type="m"
           />
           {parsedDate.days === 0 && (
             <Digit
-              keyVal={`${record.id}-${parsedDate.days}`}
+              keyVal={`${record.id}-${parsedDate.seconds}`}
               value={parsedDate.seconds}
               type="s"
             />
           )}
-          </div>
+        </div>
       </div>
       <div className="w-full flex justify-between items-center mt-2">
         <p className="text-lg">{name}</p>

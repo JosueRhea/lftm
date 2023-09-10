@@ -21,26 +21,24 @@ export function Login() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo:
-          typeof window !== "undefined"
-            ? window.location.origin + "/auth/callback"
-            : "",
+        redirectTo: typeof window !== "undefined" ? window.location.origin : "",
       },
     });
     router.refresh();
   };
 
-  // useEffect(() => {
-  //   const {
-  //     data: { subscription },
-  //   } = supabase.auth.onAuthStateChange((_, session) => {
-  //     router.refresh();
-  //   });
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_, session) => {
+      console.log("Refreshing")
+      router.refresh();
+    });
 
-  //   return () => {
-  //     subscription.unsubscribe();
-  //   };
-  // }, []);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="w-full flex justify-center mt-24">
