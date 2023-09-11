@@ -26,7 +26,7 @@ export default async function Home() {
   const activities = activitiesData || [];
 
   return (
-    <div className="mt-4 pb-20">
+    <div className="mt-4 pb-52">
       {/* <CurrentActivity userId={userId} /> */}
       <TimeSpend userId={userId} />
       <div className="mt-4">
