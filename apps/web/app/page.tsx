@@ -29,11 +29,8 @@ export default async function Home() {
     <div className="mt-4 pb-20">
       {/* <CurrentActivity userId={userId} /> */}
       <TimeSpend userId={userId} />
-      <CurrentActivities userId={userId} />
       <div className="mt-4">
-        <CardTitle>
-          Activities
-        </CardTitle>
+        <CardTitle>Activities</CardTitle>
         {activitiesError && (
           <Alert variant="destructive" className="mt-4">
             <AlertCircle className="h-4 w-4" />
@@ -45,6 +42,7 @@ export default async function Home() {
           <Activities activities={activities} userId={userId} />
         )}
       </div>
+      <CurrentActivities userId={userId} />
     </div>
   );
 }
