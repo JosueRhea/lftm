@@ -27,7 +27,6 @@ function Digit({
   keyVal: any;
   type: string;
 }) {
-
   return (
     <>
       <AnimatePresence mode="wait">
@@ -48,7 +47,7 @@ function Digit({
   );
 }
 
-function RunningCounter({
+export function RunningCounter({
   startDate,
   icon,
   name,
@@ -77,8 +76,8 @@ function RunningCounter({
   const IcomComp = iconsKV[icon];
 
   return (
-    <div className="text-2xl flex w-full flex-col">
-      <div className="w-full flex justify-between items-center">
+    <div className="flex w-full flex-col">
+      <div className="w-full flex gap-x-4 items-center">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -92,36 +91,38 @@ function RunningCounter({
             <TooltipContent>Stop counter</TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="flex gap-x-2">
-          {parsedDate.days > 0 && (
+        <div className="flex flex-col">
+          <div className="flex gap-x-2">
+            {parsedDate.days > 0 && (
+              <Digit
+                keyVal={`${record.id}-${parsedDate.days}`}
+                value={parsedDate.days}
+                type="d"
+              />
+            )}
             <Digit
-              keyVal={`${record.id}-${parsedDate.days}`}
-              value={parsedDate.days}
-              type="d"
+              keyVal={`${record.id}-${parsedDate.hours}`}
+              value={parsedDate.hours}
+              type="h"
             />
-          )}
-          <Digit
-            keyVal={`${record.id}-${parsedDate.hours}`}
-            value={parsedDate.hours}
-            type="h"
-          />
-          <Digit
-            keyVal={`${record.id}-${parsedDate.minutes}`}
-            value={parsedDate.minutes}
-            type="m"
-          />
-          {parsedDate.days === 0 && (
             <Digit
-              keyVal={`${record.id}-${parsedDate.seconds}`}
-              value={parsedDate.seconds}
-              type="s"
+              keyVal={`${record.id}-${parsedDate.minutes}`}
+              value={parsedDate.minutes}
+              type="m"
             />
-          )}
+            {parsedDate.days === 0 && (
+              <Digit
+                keyVal={`${record.id}-${parsedDate.seconds}`}
+                value={parsedDate.seconds}
+                type="s"
+              />
+            )}
+          </div>
+          <div className="flex gap-x-2 items-center text-muted-foreground">
+            <p className="text-base">{name}</p>
+            {IcomComp && <IcomComp className="w-4 h-4" />}
+          </div>
         </div>
-      </div>
-      <div className="w-full flex justify-between items-center mt-2">
-        <p className="text-lg">{name}</p>
-        {IcomComp && <IcomComp className="w-4 h-4" />}
       </div>
     </div>
   );
