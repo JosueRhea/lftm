@@ -24,7 +24,7 @@ export function Header({ avatar, username }: Props) {
   }, []);
 
   return (
-    <header className="flex mt-2 items-center py-2 justify-between sticky top-0 bg-background/60 z-20 backdrop-blur-lg">
+    <header className="flex mt-2 items-center py-2 justify-between z-20">
       <div className="flex items-center gap-x-2">
         <Avatar>
           <AvatarImage src={avatar} />
