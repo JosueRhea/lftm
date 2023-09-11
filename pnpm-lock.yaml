@@ -140,6 +140,9 @@ importers:
       typescript:
         specifier: 5.1.3
         version: 5.1.3
+      vaul:
+        specifier: ^0.6.0
+        version: 0.6.0(@types/react-dom@18.2.5)(@types/react@18.2.12)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       encoding:
         specifier: ^0.1.13
@@ -5253,6 +5256,20 @@ packages:
     dependencies:
       builtins: 5.0.1
     dev: true
+
+  /vaul@0.6.0(@types/react-dom@18.2.5)(@types/react@18.2.12)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-KLGrHya93SWH9xbWRNxXifj645ydCUe0KBiGCOBlIHsFRK6hnOr1qmrNqVG2G+fnxIp4DwDdHWOmcx5gNvHsCA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.4(@types/react-dom@18.2.5)(@types/react@18.2.12)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+    dev: false
 
   /victory-vendor@36.6.11:
     resolution: {integrity: sha512-nT8kCiJp8dQh8g991J/R5w5eE2KnO8EAIP0xocWlh9l2okngMWglOPoMZzJvek8Q1KUc4XE/mJxTZnvOB1sTYg==}

@@ -27,20 +27,18 @@ export function TimeSpend({ userId }: Props) {
   }
 
   return (
-    <Card className="col-span-4">
-      <CardHeader>
-        <div className="w-full flex justify-between items-center">
-          <CardTitle>Time spend on</CardTitle>
-          {activities && selectedActivity != null && (
-            <SelectActivity
-              activities={activities}
-              onChange={onActivityChange}
-              selectedActivity={selectedActivity}
-            />
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="pl-0">
+    <>
+      <div className="w-full flex justify-between items-center">
+        <CardTitle>Time spend on</CardTitle>
+        {activities && selectedActivity != null && (
+          <SelectActivity
+            activities={activities}
+            onChange={onActivityChange}
+            selectedActivity={selectedActivity}
+          />
+        )}
+      </div>
+      <div className="mt-4">
         {data && data.dayRecords && data.dayRecords.length > 0 ? (
           <TimeSpendChart data={data.dayRecords} />
         ) : (
@@ -48,7 +46,7 @@ export function TimeSpend({ userId }: Props) {
             <p className="text-center">No data to display</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </>
   );
 }

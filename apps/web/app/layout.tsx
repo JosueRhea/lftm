@@ -39,7 +39,7 @@ export default async function RootLayout({
           <main className="w-full max-w-4xl h-full min-h-screen relative">
             <Providers>
               <Header avatar={avatar} username={username} />
-              <Nav />
+              {/* <Nav /> */}
               {shouldShowLogin ? <Login /> : children}
             </Providers>
           </main>
