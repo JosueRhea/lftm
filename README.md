@@ -1,3 +1,3 @@
-# lftm 
+# lftm
 
 Simple time tracker

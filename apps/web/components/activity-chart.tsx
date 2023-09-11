@@ -21,7 +21,13 @@ const renderActiveShape = (props: any) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={0} textAnchor="middle" className="fill-foreground">
+      <text
+        x={cx}
+        y={cy}
+        dy={0}
+        textAnchor="middle"
+        className="fill-foreground"
+      >
         {payload.activity.name}
       </text>
       {payload.counterTime && (
@@ -85,7 +91,10 @@ export function ActivityChart({
           onMouseEnter={(_, index) => setSelectedIndex(index)}
         >
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} className="fill-secondary stroke-none" />
+            <Cell
+              key={`cell-${index}`}
+              className="fill-secondary stroke-none"
+            />
           ))}
         </Pie>
         {/* <Tooltip content={<CTooltip />} /> */}

@@ -60,9 +60,7 @@ export function Activity({
       disabled={disabled && !isActive}
     >
       <div className="w-full flex justify-between items-center">
-        <h4 className="scroll-m-20 font-semibold tracking-tight">
-          {name}
-        </h4>
+        <h4 className="scroll-m-20 font-semibold tracking-tight">{name}</h4>
         <IconComp className={"w-4 h-4"} />
       </div>
       <div className="w-full h-fit">
@@ -84,9 +82,15 @@ export function Activity({
         ) : (
           <>
             <Progress
-              className={cn("h-2 mb-1 bg-muted-foreground/10", isActive && "bg-secondary/30")}
+              className={cn(
+                "h-2 mb-1 bg-muted-foreground/10",
+                isActive && "bg-secondary/30"
+              )}
               value={progressValue}
-              indicatorClassname={cn("bg-secondary-foreground", isActive && "bg-primary-foreground")}
+              indicatorClassname={cn(
+                "bg-secondary-foreground",
+                isActive && "bg-primary-foreground"
+              )}
             />
             <p
               className={cn(

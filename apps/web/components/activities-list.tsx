@@ -29,7 +29,8 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
       {error == null &&
         activities.map((activity) => {
           const isActive =
-            currentActivityId != null &&  currentActivityId.includes(activity.id);
+            currentActivityId != null &&
+            currentActivityId.includes(activity.id);
           // const isDisabled =
           //   (currentActivityId != null && activity.id != currentActivityId) ||
           //   isActive;

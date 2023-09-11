@@ -2,7 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDb } from "./use-db";
 import { RecordWithRelationsProps } from "@/types/db";
 import { useState } from "react";
-import { deleteRecordActivity, getActivityHistory, updateRecordActivity } from "@lftm/api";
+import {
+  deleteRecordActivity,
+  getActivityHistory,
+  updateRecordActivity,
+} from "@lftm/api";
 
 interface Props {
   userId: string;

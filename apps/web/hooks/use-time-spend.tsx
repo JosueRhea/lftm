@@ -13,9 +13,7 @@ export const useTimeSpend = ({ userId }: Props) => {
   const { client } = useDb();
   const { data: activities } = useActivities({ userId });
   const [selectedActivity, setSelectedActivity] = useState(
-    activities && activities?.length > 0
-      ? activities?.[0].id
-      : null
+    activities && activities?.length > 0 ? activities?.[0].id : null
   );
   const { data, error, isLoading, isRefetching } = useQuery({
     queryKey: ["use-time-spend", userId, selectedActivity],
@@ -32,9 +30,7 @@ export const useTimeSpend = ({ userId }: Props) => {
 
   useEffect(() => {
     setSelectedActivity(
-      activities && activities?.length > 0
-        ? activities?.[0].id
-        : null
+      activities && activities?.length > 0 ? activities?.[0].id : null
     );
   }, [activities]);
 

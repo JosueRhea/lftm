@@ -28,8 +28,7 @@ export function CurrentActivity({ userId }: Props) {
         invalidate();
       },
       tag: "current-activity-subscription",
-    }).subscribe(() => { 
-    });
+    }).subscribe(() => {});
     return () => {
       channel.unsubscribe();
     };
@@ -53,13 +52,14 @@ export function CurrentActivity({ userId }: Props) {
     <div className="w-full">
       {!error && res && (
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 my-4 gap-2">
-          {res.length > 0 && res.map((record) => (
-            <Counter
-              record={(record as RecordWithRelationsProps) ?? undefined}
-              stopCounter={handleOnStop}
-              key={record.id}
-            />
-          ))}
+          {res.length > 0 &&
+            res.map((record) => (
+              <Counter
+                record={(record as RecordWithRelationsProps) ?? undefined}
+                stopCounter={handleOnStop}
+                key={record.id}
+              />
+            ))}
         </div>
       )}
       {res && res.length <= 0 && (

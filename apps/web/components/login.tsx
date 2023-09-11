@@ -31,7 +31,7 @@ export function Login() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_, session) => {
-      console.log("Refreshing")
+      console.log("Refreshing");
       router.refresh();
     });
 

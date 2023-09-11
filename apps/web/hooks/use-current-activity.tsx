@@ -25,14 +25,14 @@ export function useCurrentActivity({ userId }: Props) {
       await createRecord(client, {
         activityId: record.activity.id,
         userId,
-        created_at: record.created_at as string
+        created_at: record.created_at as string,
       });
     },
     onMutate: async ({ record }: { record: RecordWithRelationsProps }) => {
       await queryClient.cancelQueries();
       const previousRecords = queryClient.getQueryData(key);
 
-      if(previousRecords && Array.isArray(previousRecords)){
+      if (previousRecords && Array.isArray(previousRecords)) {
         queryClient.setQueryData(key, [...previousRecords, record]);
       }
       return { previousRecords };
@@ -52,15 +52,17 @@ export function useCurrentActivity({ userId }: Props) {
         currentRecordId: record.id,
       });
     },
-    onMutate: async ({record}) => {
+    onMutate: async ({ record }) => {
       await queryClient.cancelQueries();
       const previousRecords = queryClient.getQueryData(key);
 
-      if(previousRecords && Array.isArray(previousRecords)){
-        const newRecords = previousRecords.filter((rcord)=> rcord.id != record.id)
+      if (previousRecords && Array.isArray(previousRecords)) {
+        const newRecords = previousRecords.filter(
+          (rcord) => rcord.id != record.id
+        );
         queryClient.setQueryData(key, newRecords);
       }
-      
+
       return { previousRecords };
     },
     onError: (_, __, context) => {

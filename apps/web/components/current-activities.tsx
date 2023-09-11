@@ -60,7 +60,7 @@ export function CurrentActivities({ userId }: Props) {
         <Drawer.Overlay className="fixed z-40 inset-0 bg-black/40" />
         <Drawer.Content className="bg-background max-w-4xl mx-auto z-50 rounded-t-[10px] h-full max-h-[50%] fixed bottom-0 left-0 right-0 w-full shadow-xl border border-border">
           <div className="w-full h-full p-4 flex flex-col overflow-y-auto gap-y-6">
-          <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300" />
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300" />
             {res.length > 0 &&
               res.map((record) => (
                 <Activity
