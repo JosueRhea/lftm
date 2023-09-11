@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { Nav } from "@/components/nav";
 import { Header } from "@/components/header";
 import { Login } from "@/components/login";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -8,6 +7,7 @@ import { cookies } from "next/headers";
 import Providers from "@/lib/provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Metadata } from "next";
+import { CurrentActivities } from "@/components/current-activities";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,12 +36,22 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <div className="w-full h-full min-h-screen flex flex-col items-center px-4 bg-background" vaul-drawer-wrapper="">
+          <div
+            className="w-full h-full min-h-screen flex flex-col items-center px-4 bg-background"
+            vaul-drawer-wrapper=""
+          >
             <main className="w-full max-w-4xl h-full min-h-screen relative">
               <Providers>
                 <Header avatar={avatar} username={username} />
                 {/* <Nav /> */}
-                {shouldShowLogin ? <Login /> : children}
+                {shouldShowLogin ? (
+                  <Login />
+                ) : (
+                  <>
+                    {children}
+                    <CurrentActivities userId={session.user.id} />
+                  </>
+                )}
               </Providers>
             </main>
           </div>

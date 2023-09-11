@@ -2,11 +2,13 @@ import { Activities } from "@/components/activities";
 import { CurrentActivities } from "@/components/current-activities";
 import { TimeSpend } from "@/components/time-spend";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { getActivities } from "@lftm/api";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowRight } from "lucide-react";
 import { cookies } from "next/headers";
+import Link from "next/link";
 
 export default async function Home() {
   const client = createServerComponentClient({ cookies });
@@ -29,6 +31,9 @@ export default async function Home() {
     <div className="mt-4 pb-52">
       {/* <CurrentActivity userId={userId} /> */}
       <TimeSpend userId={userId} />
+      <Button asChild>
+        <Link href="/report">Full report <ArrowRight className="w-4 h-4 ml-2" /></Link>
+      </Button>
       <div className="mt-4">
         <CardTitle>Activities</CardTitle>
         {activitiesError && (
@@ -42,7 +47,6 @@ export default async function Home() {
           <Activities activities={activities} userId={userId} />
         )}
       </div>
-      <CurrentActivities userId={userId} />
     </div>
   );
 }

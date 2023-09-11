@@ -1,6 +1,5 @@
 import { ActivityHistory } from "@/components/activity-history";
 import { MyActivity } from "@/components/my-activity";
-import { TimeSpend } from "@/components/time-spend";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
@@ -16,7 +15,6 @@ async function Report() {
     <div className="w-full">
       <div className="w-full mt-4 flex gap-y-4 flex-col pb-28">
         <MyActivity userId={userId} />
-        <TimeSpend userId={userId} />
         <ActivityHistory userId={userId} />
       </div>
     </div>

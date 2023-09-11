@@ -1,8 +1,9 @@
-'use client'
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ToggleTheme } from "./toggle-theme";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Props {
   username?: string;
@@ -25,7 +26,7 @@ export function Header({ avatar, username }: Props) {
 
   return (
     <header className="flex mt-2 items-center py-2 justify-between z-20">
-      <div className="flex items-center gap-x-2">
+      <Link href="/" className="flex items-center gap-x-2">
         <Avatar>
           <AvatarImage src={avatar} />
           <AvatarFallback>{avatarFallback}</AvatarFallback>
@@ -38,7 +39,7 @@ export function Header({ avatar, username }: Props) {
             {format(date, "MMMM dd - yy")}
           </p>
         </div>
-      </div>
+      </Link>
       <ToggleTheme />
     </header>
   );
