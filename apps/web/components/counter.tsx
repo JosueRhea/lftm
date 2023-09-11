@@ -83,7 +83,10 @@ export function RunningCounter({
             <TooltipTrigger asChild>
               <button
                 className="rounded-full bg-red-400/20 hover:bg-red-400/30 p-2 transition-colors duration-200"
-                onClick={() => stopCounter(record)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  stopCounter(record);
+                }}
               >
                 <StopCircle className="w-6 h-6 stroke-red-400" />
               </button>

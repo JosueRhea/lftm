@@ -20,6 +20,7 @@ export function CurrentActivities({ userId }: Props) {
     invalidate,
     stopActivity,
   } = useCurrentActivity({ userId });
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const channel = suscribeToCurrentUserData(client, {
@@ -45,22 +46,28 @@ export function CurrentActivities({ userId }: Props) {
   if (error || !res || res.length <= 0) return null;
 
   return (
-    <Drawer.Root shouldScaleBackground>
-      <Drawer.Trigger asChild>
-        <button className="fixed bottom-0 w-full right-0 p-4 left-0 h-24 text-foreground border border-border shadow-xl max-w-4xl mx-auto rounded-tr-xl rounded-tl-xl items-center z-30 bg-background">
-          {res.length > 0 && (
-            <Activity
-              record={res[0] as RecordWithRelationsProps}
-              stopCounter={handleOnStop}
-            />
-          )}
-        </button>
-      </Drawer.Trigger>
+    <Drawer.Root open={open} onOpenChange={setOpen} shouldScaleBackground>
+      {/* <Drawer.Trigger asChild> */}
+      <button
+        className="fixed bottom-0 w-full right-0 p-4 left-0 h-24 text-foreground border border-border shadow-xl max-w-4xl mx-auto rounded-tr-xl rounded-tl-xl items-center z-30 bg-background"
+        onClick={(event) => {
+          event.stopPropagation();
+          setOpen(true);
+        }}
+      >
+        {res.length > 0 && (
+          <Activity
+            record={res[0] as RecordWithRelationsProps}
+            stopCounter={handleOnStop}
+          />
+        )}
+      </button>
+      {/* </Drawer.Trigger> */}
       <Drawer.Portal>
         <Drawer.Overlay className="fixed z-40 inset-0 bg-black/40" />
         <Drawer.Content className="bg-background max-w-4xl mx-auto z-50 rounded-t-[10px] h-full max-h-[50%] fixed bottom-0 left-0 right-0 w-full shadow-xl border border-border">
           <div className="w-full h-full p-4 flex flex-col overflow-y-auto gap-y-6">
-          <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300" />
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300" />
             {res.length > 0 &&
               res.map((record) => (
                 <Activity
