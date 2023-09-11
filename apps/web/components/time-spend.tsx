@@ -1,7 +1,7 @@
 "use client";
 
 import { TimeSpendChart } from "./time-spend-chart";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle } from "./ui/card";
 import { useTimeSpend } from "@/hooks/use-time-spend";
 import { SelectActivity } from "./select-activity";
 import { TimeSpendSkeleton } from "./time-spend-skeleton";
