@@ -31,8 +31,10 @@ export default async function Home() {
     <div className="mt-4 pb-52">
       {/* <CurrentActivity userId={userId} /> */}
       <TimeSpend userId={userId} />
-      <Button asChild>
-        <Link href="/report">Full report <ArrowRight className="w-4 h-4 ml-2" /></Link>
+      <Button className="mt-4" asChild>
+        <Link href="/report">
+          Full report <ArrowRight className="w-4 h-4 ml-2" />
+        </Link>
       </Button>
       <div className="mt-4">
         <CardTitle>Activities</CardTitle>

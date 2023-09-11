@@ -13,7 +13,7 @@ async function Report() {
 
   return (
     <div className="w-full">
-      <div className="w-full mt-4 flex gap-y-4 flex-col pb-28">
+      <div className="w-full mt-4 flex gap-y-6 flex-col pb-28">
         <MyActivity userId={userId} />
         <ActivityHistory userId={userId} />
       </div>

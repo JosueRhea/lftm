@@ -14,14 +14,12 @@ export function ActivityHistory({ userId }: Props) {
     userId,
   });
   return (
-    <Card className="col-span-4">
-      <CardHeader>
-        <div className="w-full flex justify-between items-center">
-          <CardTitle>Activity History</CardTitle>
-          <SelectDate selectedDate={selectedDate} onSelectDate={onDateChange} />
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-y-2">
+    <>
+      <div className="w-full flex justify-between items-center">
+        <CardTitle>Activity History</CardTitle>
+        <SelectDate selectedDate={selectedDate} onSelectDate={onDateChange} />
+      </div>
+      <div className="flex flex-col gap-y-2">
         {data && data.length > 0 ? (
           data?.map((record) => (
             <RecordHistory
@@ -35,7 +33,7 @@ export function ActivityHistory({ userId }: Props) {
             <p>No data to display</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </>
   );
 }

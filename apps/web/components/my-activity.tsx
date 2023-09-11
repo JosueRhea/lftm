@@ -29,14 +29,12 @@ export const MyActivity = ({ userId }: Props) => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="w-full flex justify-between items-center">
-          <CardTitle>My activity</CardTitle>
-          <SelectDate selectedDate={selectedDate} onSelectDate={onDateChange} />
-        </div>
-      </CardHeader>
-      <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <>
+      <div className="w-full flex justify-between items-center">
+        <CardTitle>My activity</CardTitle>
+        <SelectDate selectedDate={selectedDate} onSelectDate={onDateChange} />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {data && !error && (
           <>
             <div className="w-full flex items-center justify-center">
@@ -67,7 +65,7 @@ export const MyActivity = ({ userId }: Props) => {
             <AlertDescription>Something went wrong</AlertDescription>
           </Alert>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </>
   );
 };
