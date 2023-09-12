@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { RecordWithRelationsProps } from "@/types/db";
 import { RunningCounter } from "./counter";
 import { Drawer } from "vaul";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
   userId: string;
@@ -35,6 +36,12 @@ export function CurrentActivities({ userId }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (res && res.length <= 0) {
+      setOpen(false);
+    }
+  }, [res]);
+
   if (isLoading && !res) null;
 
   const handleOnStop = async (record: RecordWithRelationsProps) => {
@@ -43,25 +50,37 @@ export function CurrentActivities({ userId }: Props) {
     stopActivity({ record: record });
   };
 
-  if (error || !res || res.length <= 0) return null;
+  if (error || !res) return null;
 
   return (
     <Drawer.Root open={open} onOpenChange={setOpen} shouldScaleBackground>
-      {/* <Drawer.Trigger asChild> */}
-      <button
-        className="fixed bottom-0 w-full right-0 p-4 left-0 h-24 text-foreground border border-border shadow-xl max-w-4xl mx-auto rounded-tr-xl rounded-tl-xl items-center z-30 bg-background"
-        onClick={(event) => {
-          event.stopPropagation();
-          setOpen(true);
-        }}
-      >
+      <AnimatePresence mode="wait">
+        {/* <Drawer.Trigger asChild> */}
         {res.length > 0 && (
-          <Activity
-            record={res[0] as RecordWithRelationsProps}
-            stopCounter={handleOnStop}
-          />
+          <motion.button
+            className="fixed bottom-0 w-full right-0 p-4 left-0 h-24 text-foreground border border-border shadow-xl max-w-4xl mx-auto rounded-tr-xl rounded-tl-xl items-center z-30 bg-background"
+            onClick={(event) => {
+              event.stopPropagation();
+              setOpen(true);
+            }}
+            initial={{ y: 200 }}
+            animate={{ y: 0, transition: {
+              mass: 0
+            } }}
+            exit={{
+              y: 200,
+            }}
+            key={"motion-button-counter"}
+          >
+            {res.length > 0 && (
+              <Activity
+                record={res[0] as RecordWithRelationsProps}
+                stopCounter={handleOnStop}
+              />
+            )}
+          </motion.button>
         )}
-      </button>
+      </AnimatePresence>
       {/* </Drawer.Trigger> */}
       <Drawer.Portal>
         <Drawer.Overlay className="fixed z-40 inset-0 bg-black/40" />
