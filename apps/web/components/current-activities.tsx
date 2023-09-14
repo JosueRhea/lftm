@@ -70,6 +70,7 @@ export function CurrentActivities({ userId }: Props) {
             exit={{
               y: 200,
             }}
+            id="activities-counter"
             key={"motion-button-counter"}
           >
             {res.length > 0 && (
@@ -99,6 +100,7 @@ export function CurrentActivities({ userId }: Props) {
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
+    
   );
 }
 

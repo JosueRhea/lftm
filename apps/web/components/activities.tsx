@@ -44,7 +44,7 @@ export function Activities({ activities, userId }: Props) {
   }
 
   return (
-    <div className="w-full">
+    <main className="w-full">
       {activities.length <= 0 && (
         <Alert className="mt-4">
           <Terminal className="h-4 w-4" />
@@ -66,6 +66,6 @@ export function Activities({ activities, userId }: Props) {
         userId={userId}
         currentActivityId={data ? data.map((record)=> record.activity_id as string) : null}
       />
-    </div>
+    </main>
   );
 }

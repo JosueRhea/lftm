@@ -27,7 +27,7 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
   return (
     <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
       {error == null &&
-        activities.map((activity) => {
+        activities.map((activity, index) => {
           const isActive =
             currentActivityId != null &&  currentActivityId.includes(activity.id);
           // const isDisabled =
@@ -41,6 +41,7 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
               disabled={isActive}
               isActive={isActive}
               userId={userId}
+              shouldContainSkipToContentId={index === 0}
             />
           );
         })}

@@ -29,7 +29,6 @@ export default async function Home() {
 
   return (
     <div className="mt-4 pb-52">
-      {/* <CurrentActivity userId={userId} /> */}
       <TimeSpend userId={userId} />
       <Button className="mt-4" asChild>
         <Link href="/report">

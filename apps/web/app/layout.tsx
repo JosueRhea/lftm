@@ -8,6 +8,7 @@ import Providers from "@/lib/provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Metadata } from "next";
 import { CurrentActivities } from "@/components/current-activities";
+import { SkipToContent } from "@/components/skip-to-content";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,9 +42,9 @@ export default async function RootLayout({
             vaul-drawer-wrapper=""
           >
             <main className="w-full max-w-4xl h-full min-h-screen relative">
+              <SkipToContent />
               <Providers>
                 <Header avatar={avatar} username={username} />
-                {/* <Nav /> */}
                 {shouldShowLogin ? (
                   <Login />
                 ) : (
