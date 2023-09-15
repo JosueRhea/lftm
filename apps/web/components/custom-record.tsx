@@ -34,8 +34,8 @@ export function CustomRecord({ onOpenChange, open, record, userId }: Props) {
 
     updateRecord({
       ...record,
-      created_at: startDate.toISOString(),
-      end_date: endDate.toISOString(),
+      created_at: startDate.toUTCString(),
+      end_date: endDate.toUTCString(),
     });
     onOpenChange(false);
     resetForm();
