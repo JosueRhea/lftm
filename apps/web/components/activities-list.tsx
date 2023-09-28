@@ -25,27 +25,29 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
   const activities = data ?? [];
 
   return (
-    <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
+    <ul className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
       {error == null &&
         activities.map((activity, index) => {
           const isActive =
-            currentActivityId != null &&  currentActivityId.includes(activity.id);
+            currentActivityId != null &&
+            currentActivityId.includes(activity.id);
           // const isDisabled =
           //   (currentActivityId != null && activity.id != currentActivityId) ||
           //   isActive;
 
           return (
-            <Activity
-              key={activity.id}
-              data={activity}
-              disabled={isActive}
-              isActive={isActive}
-              userId={userId}
-              shouldContainSkipToContentId={index === 0}
-            />
+            <li key={activity.id}>
+              <Activity
+                data={activity}
+                disabled={isActive}
+                isActive={isActive}
+                userId={userId}
+                shouldContainSkipToContentId={index === 0}
+              />
+            </li>
           );
         })}
       <Activity isPlus={true} userId={userId} />
-    </div>
+    </ul>
   );
 }

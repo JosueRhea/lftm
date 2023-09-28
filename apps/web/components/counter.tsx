@@ -3,7 +3,6 @@ import { iconsKV } from "@/data/icons";
 import { getCounterFromStartDate } from "@/lib/date";
 import { cn } from "@/lib/utils";
 import { RecordWithRelationsProps } from "@/types/db";
-import { AnimatePresence, motion } from "framer-motion";
 import { StopCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -18,30 +17,12 @@ interface Props {
   stopCounter: (record: RecordWithRelationsProps) => void;
 }
 
-function Digit({
-  value,
-  keyVal,
-  type,
-}: {
-  value: number;
-  keyVal: any;
-  type: string;
-}) {
+function Digit({ value, type }: { value: number; type: string }) {
   return (
     <>
-      <AnimatePresence mode="wait">
-        <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ y: 5, opacity: 0 }}
-          transition={{
-            duration: 0.1,
-          }}
-          key={keyVal}
-        >
-          <p>{value}</p>
-        </motion.div>
-      </AnimatePresence>
+      <div>
+        <p>{value}</p>
+      </div>
       <span>{type}</span>
     </>
   );
@@ -98,27 +79,17 @@ export function RunningCounter({
           <div className="flex gap-x-2">
             {parsedDate.days > 0 && (
               <Digit
-                keyVal={`${record.id}-${parsedDate.days}`}
                 value={parsedDate.days}
                 type="d"
               />
             )}
+            <Digit value={parsedDate.hours} type="h" />
             <Digit
-              keyVal={`${record.id}-${parsedDate.hours}`}
-              value={parsedDate.hours}
-              type="h"
-            />
-            <Digit
-              keyVal={`${record.id}-${parsedDate.minutes}`}
               value={parsedDate.minutes}
               type="m"
             />
             {parsedDate.days === 0 && (
-              <Digit
-                keyVal={`${record.id}-${parsedDate.seconds}`}
-                value={parsedDate.seconds}
-                type="s"
-              />
+              <Digit value={parsedDate.seconds} type="s" />
             )}
           </div>
           <div className="flex gap-x-2 items-center text-muted-foreground">
