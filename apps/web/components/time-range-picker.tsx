@@ -37,7 +37,7 @@ export function TimeRangePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[250px] justify-start text-left font-normal",
+              "sm:w-[250px] w-full justify-start text-left font-normal",
               !range && "text-muted-foreground"
             )}
           >

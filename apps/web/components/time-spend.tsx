@@ -31,7 +31,7 @@ export function TimeSpend({ userId }: Props) {
         <CardTitle>Time spent on</CardTitle>
       </div>
       {activities && selectedActivity != null && (
-        <div className="flex gap-x-2 my-4">
+        <div className="flex gap-2 my-4 flex-col sm:flex-row">
           <TimeRangePicker onChange={setDate} range={date} />
           <SelectActivity
             activities={activities}

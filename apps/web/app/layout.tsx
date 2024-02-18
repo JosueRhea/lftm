@@ -38,10 +38,10 @@ export default async function RootLayout({
       <body className={`${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <div
-            className="w-full h-full min-h-screen flex flex-col items-center px-4 bg-background"
+            className="w-full h-full min-h-[100dvh] flex flex-col items-center px-4 bg-background"
             vaul-drawer-wrapper=""
           >
-            <main className="w-full max-w-4xl h-full min-h-screen relative">
+            <main className="w-full max-w-4xl h-full min-h-[100dvh] relative">
               <SkipToContent />
               <Providers>
                 <Header avatar={avatar} username={username} />

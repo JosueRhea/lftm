@@ -22,7 +22,7 @@ export function SelectActivity({
 }: Props) {
   return (
     <Select value={selectedActivity} onValueChange={onChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="sm:w-[180px] w-full">
         <SelectValue placeholder="Select an activity" />
       </SelectTrigger>
       <SelectContent className="max-h-72">
