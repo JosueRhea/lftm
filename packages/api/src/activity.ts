@@ -300,10 +300,6 @@ export async function getRecords(
 
   if (data == null || data.length <= 0) return { dayRecords: [] };
 
-  const diffDays = differenceInDays(to, from);
-
-  console.log(diffDays);
-
   const datesArray = createDayDatesArray({ from, to });
 
   const parsedDays = datesArray.map((day) => {
@@ -334,6 +330,12 @@ export async function getRecords(
     };
   });
 
+  let totalTrackedTime = {
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    days: 0,
+  }
   const daysData: TimeSpendProps[] = parsedDays.map((day) => {
     const start = day.start;
     const end = day.end;
@@ -384,6 +386,7 @@ export async function getRecords(
       const newCounterTime = getCounterFromStartAndEndDate(startDate, endDate);
       counter += diff;
       counterTime = sumTwoCounters(newCounterTime, counterTime);
+      totalTrackedTime = sumTwoCounters(totalTrackedTime, newCounterTime);
     });
 
     return {
@@ -397,6 +400,7 @@ export async function getRecords(
 
   return {
     dayRecords: daysData,
+    totalTrackedTime,
   };
 }
 
