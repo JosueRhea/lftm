@@ -34,7 +34,7 @@ export default async function RootLayout({
   const avatar = session?.user.user_metadata.avatar_url;
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <div

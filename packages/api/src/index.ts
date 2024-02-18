@@ -3,12 +3,12 @@ export {
   createRecord,
   deleteRecordActivity,
   get24hRecords,
-  get7dRecords,
   getActivityHistory,
   getCurrentActivity,
   stopRecord,
   suscribeToActivityChanges,
   suscribeToCurrentUserData,
   updateRecordActivity,
+  getRecords
 } from "./activity";
 export { getUserData, getActivities } from "./user";

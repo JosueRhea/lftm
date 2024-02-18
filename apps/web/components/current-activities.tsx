@@ -57,21 +57,32 @@ export function CurrentActivities({ userId }: Props) {
       <AnimatePresence mode="wait">
         {/* <Drawer.Trigger asChild> */}
         {res.length > 0 && (
-          <motion.button
+          <motion.div
             className="fixed bottom-0 w-full right-0 p-4 left-0 h-24 text-foreground border border-border shadow-xl max-w-4xl mx-auto rounded-tr-xl rounded-tl-xl items-center z-30 bg-background"
             onClick={(event) => {
               event.stopPropagation();
               setOpen(true);
             }}
             initial={{ y: 200 }}
-            animate={{ y: 0, transition: {
-              mass: 0
-            } }}
+            animate={{
+              y: 0,
+              transition: {
+                mass: 0,
+              },
+            }}
             exit={{
               y: 200,
             }}
             id="activities-counter"
             key={"motion-button-counter"}
+            tabIndex={0}
+            role="button"
+            aria-pressed="false"
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                setOpen(true);
+              }
+            }}
           >
             {res.length > 0 && (
               <Activity
@@ -79,7 +90,7 @@ export function CurrentActivities({ userId }: Props) {
                 stopCounter={handleOnStop}
               />
             )}
-          </motion.button>
+          </motion.div>
         )}
       </AnimatePresence>
       {/* </Drawer.Trigger> */}
@@ -100,7 +111,6 @@ export function CurrentActivities({ userId }: Props) {
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
-    
   );
 }
 

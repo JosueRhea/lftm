@@ -28,7 +28,7 @@ const CTooltip = ({ active, payload, label }: any) => {
       <div className="w-36 bg-background text-foreground ring-1 ring-muted p-2 h-fit rounded-sm flex flex-col justify-center">
         {data.counterTime && (
           <div className="w-full flex flex-col items-center">
-            <p className="text-sm">{format(new Date(data.dayStart), "MM eeee yyyy")}</p>
+            <p className="text-sm">{format(new Date(data.dayStart), "MMM dd yyyy")}</p>
             <p className="text-base">
               {data.counterTime.hours +
                 "h" +
@@ -61,7 +61,7 @@ export const TimeSpendChart = ({ data }: Props) => {
           axisLine={false}
           tickFormatter={(value) => {
             const date = new Date(value);
-            const dateFormated = format(date, "MM eee")
+            const dateFormated = format(date, "MMM dd")
             // const formatedDate = date.toLocaleDateString("en-US", {
             //   day: "2-digit",
             //   month: "2-digit",

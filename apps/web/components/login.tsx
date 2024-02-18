@@ -22,6 +22,10 @@ export function Login() {
       provider: "google",
       options: {
         redirectTo: typeof window !== "undefined" ? window.location.origin : "",
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        }
       },
     });
     router.refresh();

@@ -1,3 +1,4 @@
+import { eachDayOfInterval } from "date-fns";
 export function getCounterFromStartDate(startDate: Date) {
   const now = new Date();
   // force 2 days
@@ -116,19 +117,16 @@ export function sumTwoCounters(counter1: Counter, counter2: Counter) {
   };
 }
 
-export function createDayDatesArray({ count }: { count: number }) {
-  const datesArray = [];
-
-  for (let i = count - 1; i >= 0; i--) {
-    const dayStart = new Date();
-    dayStart.setDate(dayStart.getDate() - i);
+export function createDayDatesArray({ from, to }: { from: Date; to: Date }) {
+  const datesArray = eachDayOfInterval({ start: from, end: to }).map((date) => {
+    const dayStart = new Date(date);
     dayStart.setHours(0, 0, 0, 0);
 
-    const dayEnd = new Date(dayStart.getTime());
+    const dayEnd = new Date(date);
     dayEnd.setHours(23, 59, 59, 999);
 
-    datesArray.push({ start: dayStart, end: dayEnd });
-  }
+    return { start: dayStart, end: dayEnd };
+  });
 
   return datesArray;
 }

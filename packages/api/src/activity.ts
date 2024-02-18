@@ -10,6 +10,7 @@ import {
   sumTwoCounters,
 } from "./lib/date";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { differenceInDays } from "date-fns";
 
 export function suscribeToActivityChanges(
   client: SupabaseClient<Database>,
@@ -263,24 +264,27 @@ export async function get24hRecords(
   return { records: findedRecords, totalCount: totalTrackedHours };
 }
 
-export async function get7dRecords(
+export async function getRecords(
   client: SupabaseClient<Database>,
   {
     userId,
-    date,
+    from,
+    to,
     activityId,
-  }: { userId: string; date: Date; activityId: string | null | undefined }
+  }: {
+    userId: string;
+    from: Date | undefined;
+    to: Date | undefined;
+    activityId: string | null | undefined;
+  }
 ) {
-  if (!activityId) return { dayRecords: [] };
-  date.setHours(0, 0, 0, 0);
-  date.setDate(date.getDate() - 7); // Subtract 7 days from dayStart
-  const dayStart = new Date(date.getTime());
-  date.setDate(date.getDate() + 7); // Subtract 1 day from dayEnd
-  date.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
-  const dayEnd = new Date(date.getTime());
+  if (!activityId || !from || !to) return { dayRecords: [] };
 
-  const isoDayStart = dayStart.toISOString();
-  const isoDayEnd = dayEnd.toISOString();
+  from.setHours(0, 0, 0, 0);
+  to.setHours(23, 59, 59, 999);
+
+  const isoDayStart = from.toISOString();
+  const isoDayEnd = to.toISOString();
 
   const res = await client
     .from("record")
@@ -296,7 +300,11 @@ export async function get7dRecords(
 
   if (data == null || data.length <= 0) return { dayRecords: [] };
 
-  const datesArray = createDayDatesArray({ count: 7 });
+  const diffDays = differenceInDays(to, from);
+
+  console.log(diffDays);
+
+  const datesArray = createDayDatesArray({ from, to });
 
   const parsedDays = datesArray.map((day) => {
     const start = day.start.getTime();

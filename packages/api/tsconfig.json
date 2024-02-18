@@ -13,7 +13,7 @@
     "composite": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "target": "ESNext"
   },
   "include": ["src"]
