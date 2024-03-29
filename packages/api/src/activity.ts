@@ -372,6 +372,7 @@ export async function getRecords(
   const data = res.data as RecordWithRelationsProps[];
   const datesArray = createDayDatesArray({ from, to });
 
+  let total_tracked_ms = 0;
   const parsedDays: DayRecordStat[] = datesArray.map((day) => {
     const start = day.start.getTime();
     const end = day.end.getTime();
@@ -399,6 +400,8 @@ export async function getRecords(
 
     const avg_elapsed_ms = tracked_ms / filtered.length;
 
+    total_tracked_ms += tracked_ms;
+
     return {
       day: day.start.toISOString(),
       tracked_ms: tracked_ms,
@@ -407,7 +410,7 @@ export async function getRecords(
     };
   });
 
-  return { dayRecords: parsedDays };
+  return { dayRecords: parsedDays, total_tracked_ms };
 }
 
 export async function getActivityHistory(
@@ -469,6 +472,36 @@ export async function updateRecordActivity(
       elapsed_ms: record.elapsed_ms,
     })
     .eq("id", record.id);
+  if (res.error) {
+    throw new Error("Something went wrong updating the record");
+  }
+
+  return res.data;
+}
+
+export async function getTopActivities(
+  client: SupabaseClient<Database>,
+  { userId }: { userId: string }
+) {
+  // @ts-ignore
+  const res = await client.rpc("get_top_activities", { user_id_val: userId });
+
+  if (res.error) {
+    throw new Error("Something went wrong updating the record");
+  }
+
+  return res.data;
+}
+
+export async function getAverageActivity(
+  client: SupabaseClient<Database>,
+  { userId }: { userId: string }
+) {
+  // @ts-ignore
+  const res = await client.rpc("get_average_elapsed_ms", {
+    user_id_val: userId,
+  });
+
   if (res.error) {
     throw new Error("Something went wrong updating the record");
   }

@@ -5,6 +5,7 @@ import { useTimeSpend } from "@/hooks/use-time-spend";
 import { SelectActivity } from "./select-activity";
 import { TimeSpendSkeleton } from "./time-spend-skeleton";
 import { TimeRangePicker } from "./time-range-picker";
+import { parseElapsed } from "@/lib/utils";
 
 interface Props {
   userId: string;
@@ -26,21 +27,29 @@ export function TimeSpend({ userId }: Props) {
   return (
     <>
       {activities && selectedActivity != null && (
-        <div className="flex gap-2 my-4 flex-col sm:flex-row">
-          <TimeRangePicker onChange={setDate} range={date} />
-          <SelectActivity
-            activities={activities}
-            onChange={onActivityChange}
-            selectedActivity={selectedActivity}
-          />
+        <div className="flex gap-2  flex-col sm:flex-row ">
+          <div className="flex gap-2  flex-col sm:flex-row">
+            <TimeRangePicker onChange={setDate} range={date} />
+            <SelectActivity
+              activities={activities}
+              onChange={onActivityChange}
+              selectedActivity={selectedActivity}
+            />
+          </div>
         </div>
       )}
       {isLoading ? (
         <TimeSpendSkeleton />
       ) : (
-        <div className="mt-4">
+        <div className="">
           {data && data.dayRecords && data.dayRecords.length > 0 ? (
-            <TimeSpendChart data={data.dayRecords} />
+            <div>
+              <p className="px-4 py-2">
+                Total tracked:{" "}
+                <strong>{parseElapsed(data.total_tracked_ms ?? 0)}</strong>
+              </p>
+              <TimeSpendChart data={data.dayRecords} />
+            </div>
           ) : (
             <div className="w-full flex justify-center my-16">
               <p className="text-center">No data to display</p>

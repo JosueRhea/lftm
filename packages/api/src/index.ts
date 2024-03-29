@@ -9,6 +9,8 @@ export {
   suscribeToActivityChanges,
   suscribeToCurrentUserData,
   updateRecordActivity,
-  getRecords
+  getRecords,
+  getTopActivities,
+  getAverageActivity,
 } from "./activity";
 export { getUserData, getActivities } from "./user";
