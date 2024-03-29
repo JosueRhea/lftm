@@ -1,148 +1,149 @@
-
 export type Json =
   | string
   | number
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export interface Database {
   public: {
     Tables: {
       activity: {
         Row: {
-          created_at: string | null
-          icon: string
-          id: string
-          name: string
-          updated_at: string | null
-          user_id: string | null
-        }
+          created_at: string | null;
+          icon: string;
+          id: string;
+          name: string;
+          updated_at: string | null;
+          user_id: string | null;
+        };
         Insert: {
-          created_at?: string | null
-          icon: string
-          id?: string
-          name: string
-          updated_at?: string | null
-          user_id?: string | null
-        }
+          created_at?: string | null;
+          icon: string;
+          id?: string;
+          name: string;
+          updated_at?: string | null;
+          user_id?: string | null;
+        };
         Update: {
-          created_at?: string | null
-          icon?: string
-          id?: string
-          name?: string
-          updated_at?: string | null
-          user_id?: string | null
-        }
+          created_at?: string | null;
+          icon?: string;
+          id?: string;
+          name?: string;
+          updated_at?: string | null;
+          user_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "activity_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            foreignKeyName: "activity_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           }
-        ]
-      }
+        ];
+      };
       profiles: {
         Row: {
-          avatar_url: string | null
-          created_at: string | null
-          current_activity: string | null
-          id: string
-          username: string | null
-        }
+          avatar_url: string | null;
+          created_at: string | null;
+          current_activity: string | null;
+          id: string;
+          username: string | null;
+        };
         Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          current_activity?: string | null
-          id: string
-          username?: string | null
-        }
+          avatar_url?: string | null;
+          created_at?: string | null;
+          current_activity?: string | null;
+          id: string;
+          username?: string | null;
+        };
         Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          current_activity?: string | null
-          id?: string
-          username?: string | null
-        }
+          avatar_url?: string | null;
+          created_at?: string | null;
+          current_activity?: string | null;
+          id?: string;
+          username?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: "profiles_id_fkey";
+            columns: ["id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           }
-        ]
-      }
+        ];
+      };
       record: {
         Row: {
-          activity_id: string | null
-          created_at: string | null
-          end_date: string | null
-          id: string
-          user_id: string | null
-        }
+          activity_id: string | null;
+          created_at: string | null;
+          end_date: string | null;
+          id: string;
+          user_id: string | null;
+          elapsed_ms: number;
+        };
         Insert: {
-          activity_id?: string | null
-          created_at?: string | null
-          end_date?: string | null
-          id?: string
-          user_id?: string | null
-        }
+          activity_id?: string | null;
+          created_at?: string | null;
+          end_date?: string | null;
+          id?: string;
+          user_id?: string | null;
+          elapsed_ms: number;
+        };
         Update: {
-          activity_id?: string | null
-          created_at?: string | null
-          end_date?: string | null
-          id?: string
-          user_id?: string | null
-        }
+          activity_id?: string | null;
+          created_at?: string | null;
+          end_date?: string | null;
+          id?: string;
+          elapsed_ms: number;
+          user_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "record_activity_id_fkey"
-            columns: ["activity_id"]
-            referencedRelation: "activity"
-            referencedColumns: ["id"]
+            foreignKeyName: "record_activity_id_fkey";
+            columns: ["activity_id"];
+            referencedRelation: "activity";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "record_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            foreignKeyName: "record_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           }
-        ]
-      }
-    }
+        ];
+      };
+    };
     Views: {
       record_30_day_view: {
         Row: {
-          activity_id: string | null
-          count: number | null
-          month: string | null
-          year: string | null
-        }
+          activity_id: string | null;
+          count: number | null;
+          month: string | null;
+          year: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "record_activity_id_fkey"
-            columns: ["activity_id"]
-            referencedRelation: "activity"
-            referencedColumns: ["id"]
+            foreignKeyName: "record_activity_id_fkey";
+            columns: ["activity_id"];
+            referencedRelation: "activity";
+            referencedColumns: ["id"];
           }
-        ]
-      }
-    }
+        ];
+      };
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
+      [_ in never]: never;
+    };
+  };
 }
-
 
 export type ActivityProps = Database["public"]["Tables"]["activity"]["Row"];
 export type RecordProps = Database["public"]["Tables"]["record"]["Row"];
@@ -160,10 +161,9 @@ export type RecordWithCounterProps = RecordWithRelationsProps & {
   counterTime?: CounterTimeProps;
 };
 
-export type TimeSpendProps = {
-  dayStart: Date;
-  dayEnd: Date;
-  counter: number;
-  counterTime: CounterTimeProps;
-  formatedDate: string;
+export type DayRecordStat = {
+  day: string;
+  tracked_ms: number;
+  avg_elapsed_ms: number;
+  activity_id: string;
 };

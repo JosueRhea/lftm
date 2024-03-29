@@ -1,6 +1,6 @@
 "use client";
 import { useActivityHistory } from "@/hooks/use-activity-history";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle } from "./ui/card";
 import { RecordHistory } from "./record-history";
 import { RecordWithRelationsProps } from "@/types/db";
 import { SelectDate } from "./select-date";

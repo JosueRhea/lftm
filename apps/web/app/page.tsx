@@ -1,6 +1,6 @@
 import { Activities } from "@/components/activities";
-import { CurrentActivities } from "@/components/current-activities";
 import { TimeSpend } from "@/components/time-spend";
+import { TotalOverview } from "@/components/total-overview";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
@@ -16,9 +16,6 @@ export default async function Home() {
     data: { session },
   } = await client.auth.getSession();
   const userId = session?.user.id as string;
-  // const { data, error } = await getUserData(client, {
-  //   userId,
-  // });
 
   const { data: activitiesData, error: activitiesError } = await getActivities(
     client,
@@ -29,7 +26,12 @@ export default async function Home() {
 
   return (
     <div className="mt-4 pb-52">
-      <TimeSpend userId={userId} />
+      <div className="w-full border rounded-lg grid grid-cols-[1fr] md:grid-cols-[0.75fr_1.25fr] p-0.5">
+        <TotalOverview />
+        <div className="w-full h-full p-2">
+          <TimeSpend userId={userId} />
+        </div>
+      </div>
       <Button className="mt-4" asChild>
         <Link href="/report">
           Full report <ArrowRight className="w-4 h-4 ml-2" />

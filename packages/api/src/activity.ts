@@ -1,8 +1,8 @@
 import {
   Database,
+  DayRecordStat,
   RecordWithCounterProps,
   RecordWithRelationsProps,
-  TimeSpendProps,
 } from "./types";
 import {
   createDayDatesArray,
@@ -10,7 +10,14 @@ import {
   sumTwoCounters,
 } from "./lib/date";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { differenceInDays } from "date-fns";
+import {
+  isSameDay,
+  endOfDay,
+  addDays,
+  startOfDay,
+  differenceInCalendarDays,
+  differenceInMilliseconds,
+} from "date-fns";
 
 export function suscribeToActivityChanges(
   client: SupabaseClient<Database>,
@@ -120,6 +127,7 @@ export async function createRecord(
       activity_id: activityId,
       user_id: userId,
       created_at: created_at,
+      elapsed_ms: 0,
     })
     .select("*")
     .single();
@@ -131,34 +139,94 @@ export async function createRecord(
     .update({ updated_at: new Date().toISOString() })
     .eq("id", activityId);
 
-  if (activityData.error) return activityData;
-
-  return await client
-    .from("profiles")
-    .update({
-      current_activity: recordData.data.id,
-    })
-    .eq("id", userId);
+  return activityData;
 }
+
+const parseStartAndEndDate = (start: string, end: string) => {
+  const startDay = new Date(start);
+  const endDay = new Date(end);
+  const sameDay = isSameDay(startDay, endDay);
+  if (sameDay) {
+    const elapsedMs = differenceInMilliseconds(endDay, startDay);
+    return [{ start: startDay, end: endDay, diff: elapsedMs }];
+  }
+
+  const daysDiff = differenceInCalendarDays(endDay, startDay);
+  console.log({ daysDiff });
+
+  const result = [];
+
+  for (let i = 0; i <= daysDiff; i++) {
+    const currentDate = addDays(startDay, i);
+
+    const rangeStart = i === 0 ? startDay : startOfDay(currentDate);
+    const rangeEnd = i === daysDiff ? endDay : endOfDay(currentDate);
+
+    const diff = differenceInMilliseconds(rangeEnd, rangeStart);
+
+    result.push({
+      start: rangeStart,
+      end: rangeEnd,
+      diff: diff,
+    });
+  }
+
+  return result;
+};
 
 export async function stopRecord(
   client: SupabaseClient<Database>,
-  { userId, currentRecordId }: { userId: string; currentRecordId: string }
+  { currentRecordId, userId }: { userId: string; currentRecordId: string }
 ) {
-  const recordData = await client
+  const recordToUpdate = await client
     .from("record")
-    .update({
-      end_date: new Date().toUTCString(),
-    })
+    .select("created_at, activity_id")
+    .eq("id", currentRecordId)
+    .single();
+  if (recordToUpdate.error || !recordToUpdate?.data.created_at)
+    return recordToUpdate;
+
+  // const diff = differenceInMilliseconds(
+  //   new Date(),
+  //   new Date(recordToUpdate.data.created_at)
+  // );
+
+  // // Convert milliseconds to hours, minutes, and seconds
+  // const hours = Math.floor(diff / (1000 * 60 * 60));
+  // const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  // const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  // console.log(
+  //   `Time elapsed: ${hours} hours, ${minutes} minutes, ${seconds} seconds`
+  // );
+
+  const result = parseStartAndEndDate(
+    recordToUpdate.data.created_at,
+    new Date().toISOString()
+  );
+
+  const { error } = await client
+    .from("record")
+    .delete()
     .eq("id", currentRecordId);
 
-  if (recordData.error) return recordData;
-  return await client
-    .from("profiles")
-    .update({
-      current_activity: null,
+  if (error) {
+    throw new Error("Something went wrong");
+  }
+
+  const recordData = await client.from("record").insert(
+    result.map((data) => {
+      return {
+        created_at: data.start.toISOString(),
+        end_date: data.end.toISOString(),
+        activity_id: recordToUpdate.data.activity_id,
+        user_id: userId,
+        elapsed_ms: data.diff,
+      };
     })
-    .eq("id", userId);
+  );
+
+  return recordData;
 }
 
 export async function get24hRecords(
@@ -253,6 +321,7 @@ export async function get24hRecords(
       activity_id: "untracked",
       counter: untrackedHours,
       created_at: "untracked",
+      elapsed_ms: 0,
       end_date: "untracked",
       id: "untracked",
       user_id: "untracked",
@@ -280,7 +349,7 @@ export async function getRecords(
 ) {
   if (!activityId || !from || !to) return { dayRecords: [] };
 
-  from.setHours(0, 0, 0, 0);
+  from.setHours(20, 0, 0, 0);
   to.setHours(23, 59, 59, 999);
 
   const isoDayStart = from.toISOString();
@@ -296,17 +365,18 @@ export async function getRecords(
     )
     .order("created_at", { ascending: true });
 
+  if (res.error) {
+    throw new Error("Something went wrong " + res.error.message);
+  }
+
   const data = res.data as RecordWithRelationsProps[];
-
-  if (data == null || data.length <= 0) return { dayRecords: [] };
-
   const datesArray = createDayDatesArray({ from, to });
 
-  const parsedDays = datesArray.map((day) => {
+  const parsedDays: DayRecordStat[] = datesArray.map((day) => {
     const start = day.start.getTime();
     const end = day.end.getTime();
 
-    const findedDays = data.filter((record) => {
+    const filtered = data.filter((record) => {
       const recordStart = new Date(record.created_at as string).getTime();
       const recordEnd = record.end_date
         ? new Date(record.end_date).getTime()
@@ -323,85 +393,21 @@ export async function getRecords(
       return false;
     });
 
+    const tracked_ms = filtered.reduce((acc, record) => {
+      return acc + record.elapsed_ms;
+    }, 0);
+
+    const avg_elapsed_ms = tracked_ms / filtered.length;
+
     return {
-      start: day.start,
-      end: day.end,
-      records: findedDays,
+      day: day.start.toISOString(),
+      tracked_ms: tracked_ms,
+      activity_id: activityId,
+      avg_elapsed_ms: avg_elapsed_ms,
     };
   });
 
-  let totalTrackedTime = {
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    days: 0,
-  }
-  const daysData: TimeSpendProps[] = parsedDays.map((day) => {
-    const start = day.start;
-    const end = day.end;
-
-    const defaultCounterTime = {
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-      days: 0,
-    };
-
-    const formatedDate = start.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short",
-    });
-
-    if (day.records.length <= 0)
-      return {
-        dayStart: day.start,
-        dayEnd: day.end,
-        counter: 0,
-        counterTime: defaultCounterTime,
-        formatedDate,
-      };
-
-    const startTime = start.getTime();
-    const endTime = end.getTime();
-
-    let counter = 0.0;
-    let counterTime = defaultCounterTime;
-    day.records.forEach((record) => {
-      const startDate = new Date(record.created_at as string);
-      if (startDate.getTime() < startTime) {
-        startDate.setTime(startTime);
-      }
-
-      const endDate =
-        record.end_date != null
-          ? new Date(record.end_date as string)
-          : new Date();
-
-      if (endDate.getTime() > endTime) {
-        endDate.setTime(endTime);
-      }
-
-      const sub = endDate.getTime() - startDate.getTime();
-      const diff = sub / (1000 * 60 * 60);
-      const newCounterTime = getCounterFromStartAndEndDate(startDate, endDate);
-      counter += diff;
-      counterTime = sumTwoCounters(newCounterTime, counterTime);
-      totalTrackedTime = sumTwoCounters(totalTrackedTime, newCounterTime);
-    });
-
-    return {
-      dayStart: day.start,
-      dayEnd: day.end,
-      counter: counter,
-      counterTime: counterTime,
-      formatedDate,
-    };
-  });
-
-  return {
-    dayRecords: daysData,
-    totalTrackedTime,
-  };
+  return { dayRecords: parsedDays };
 }
 
 export async function getActivityHistory(
@@ -419,6 +425,8 @@ export async function getActivityHistory(
   date.setHours(23, 59, 59, 999);
   const dayEnd = new Date(date.getTime());
   const isoDayEnd = dayEnd.toISOString();
+
+  console.log({ isoDayStart, isoDayEnd });
   const { data, error } = await client
     .from("record")
     .select("*, activity(*)")
@@ -455,7 +463,11 @@ export async function updateRecordActivity(
 ) {
   const res = await client
     .from("record")
-    .update({ created_at: record.created_at, end_date: record.end_date })
+    .update({
+      created_at: record.created_at,
+      end_date: record.end_date,
+      elapsed_ms: record.elapsed_ms,
+    })
     .eq("id", record.id);
   if (res.error) {
     throw new Error("Something went wrong updating the record");

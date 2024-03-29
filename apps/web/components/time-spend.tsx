@@ -1,7 +1,6 @@
 "use client";
 
 import { TimeSpendChart } from "./time-spend-chart";
-import { CardTitle } from "./ui/card";
 import { useTimeSpend } from "@/hooks/use-time-spend";
 import { SelectActivity } from "./select-activity";
 import { TimeSpendSkeleton } from "./time-spend-skeleton";
@@ -13,7 +12,6 @@ interface Props {
 
 export function TimeSpend({ userId }: Props) {
   const {
-    error,
     data,
     selectedActivity,
     activities,
@@ -27,9 +25,6 @@ export function TimeSpend({ userId }: Props) {
 
   return (
     <>
-      <div className="w-full flex justify-between items-center">
-        <CardTitle>Time spent on</CardTitle>
-      </div>
       {activities && selectedActivity != null && (
         <div className="flex gap-2 my-4 flex-col sm:flex-row">
           <TimeRangePicker onChange={setDate} range={date} />
@@ -53,16 +48,19 @@ export function TimeSpend({ userId }: Props) {
           )}
         </div>
       )}
-      {data && data.totalTrackedTime != null && (
-        <div className="w-full sm:w-1/4 my-4 border p-4 rounded-md">
-          <p className="text-xl font-semibold">
-            {data.totalTrackedTime.days > 0
-              ? `${data.totalTrackedTime.days}d ${data.totalTrackedTime.hours}h ${data.totalTrackedTime.minutes}m`
-              : `${data.totalTrackedTime.hours}h ${data.totalTrackedTime.minutes}m ${data.totalTrackedTime.seconds}s`}
-          </p>
-          <p className="text-muted-foreground">Total time tracked</p>
-        </div>
-      )}
     </>
   );
+
+  // {
+  //   data && data.totalTrackedTime != null && (
+  //     <div className="w-full sm:w-1/4 border p-4 rounded-md">
+  //       <p className="text-xl font-semibold">
+  //         {data.totalTrackedTime.days > 0
+  //           ? `${data.totalTrackedTime.days}d ${data.totalTrackedTime.hours}h ${data.totalTrackedTime.minutes}m`
+  //           : `${data.totalTrackedTime.hours}h ${data.totalTrackedTime.minutes}m ${data.totalTrackedTime.seconds}s`}
+  //       </p>
+  //       <p className="text-muted-foreground">Total time tracked</p>
+  //     </div>
+  //   );
+  // }
 }

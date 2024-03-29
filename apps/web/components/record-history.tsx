@@ -96,9 +96,7 @@ export function RecordHistory({ data, userId }: Props) {
       <ConfirmDialog
         isOpen={openDeleteConf}
         onOpenChange={setOpenDeleteConf}
-        onConfirm={
-          isCurrentActivity ? undefined : () => deleteRecord(data.id)
-        }
+        onConfirm={isCurrentActivity ? undefined : () => deleteRecord(data.id)}
       />
     </div>
   );

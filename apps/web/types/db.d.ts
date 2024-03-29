@@ -139,11 +139,3 @@ export type RecordWithCounterProps = RecordWithRelationsProps & {
   counter: number;
   counterTime?: CounterTimeProps;
 };
-
-export type TimeSpendProps = {
-  dayStart: Date;
-  dayEnd: Date;
-  counter: number;
-  counterTime: CounterTimeProps;
-  formatedDate: string;
-};
