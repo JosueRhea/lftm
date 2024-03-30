@@ -32,7 +32,7 @@ export const TotalOverview = ({ userId }: Props) => {
   const parsedAvg = avg != null ? parseElapsed(avg) : null;
 
   return (
-    <div className="bg-secondary rounded-lg w-full h-full p-4 flex flex-col justify-between relative overflow-hidden">
+    <div className="bg-card rounded-lg w-full h-full p-4 flex flex-col justify-between relative overflow-hidden">
       <div>
         {" "}
         <div className="bg-gradient-to-br from-pink-500 to-purple-500 absolute w-24 h-24 top-0 right-0 blur-2xl"></div>

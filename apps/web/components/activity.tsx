@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "./ui/button";
 import { AddActivity } from "./add-activity";
 import { ActivityProps } from "@/types/db";
 import { iconsKV } from "@/data/icons";
@@ -8,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useMyActivity } from "@/hooks/use-my-activity";
 import { Progress } from "./ui/progress";
 import { Skeleton } from "./ui/skeleton";
+import { format } from "date-fns";
 
 type Props = {
   isPlus?: boolean;
@@ -52,29 +52,24 @@ export function Activity({
   return (
     <button
       className={cn(
-        "w-full h-28 relative flex flex-col justify-between items-start text-left rounded-md py-2 px-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+        "w-full h-28 relative border overflow-hidden shadow-sm flex flex-col justify-between items-start text-left rounded-md py-2 px-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
         isActive
           ? "pointer-events-none bg-primary text-primary-foreground"
-          : "bg-secondary"
+          : "bg-card"
       )}
-      // variant={"ghost"}
       onClick={disabled ? undefined : () => startActivity({ activity: data })}
       disabled={disabled && !isActive}
       id={shouldContainSkipToContentId ? "activities-list" : undefined}
     >
-      <div className="w-full flex justify-between items-center">
-        <h4 className="scroll-m-20 font-semibold tracking-tight">{name}</h4>
-        <IconComp className={"w-4 h-4"} />
+      <div className="w-full">
+        <div className="w-full flex justify-between items-center">
+          <h4 className="scroll-m-20 font-semibold tracking-tight">{name}</h4>
+          <IconComp className={"w-4 h-4"} />
+        </div>
       </div>
       <div className="w-full h-fit">
         {isLoading ? (
           <>
-            <Skeleton
-              className={cn(
-                "w-full h-2 mb-1 bg-muted-foreground/50",
-                isActive && "bg-muted-foreground/20"
-              )}
-            />
             <Skeleton
               className={cn(
                 "w-3/6 h-2 mb-1 bg-muted-foreground/50",
@@ -84,17 +79,6 @@ export function Activity({
           </>
         ) : (
           <>
-            <Progress
-              className={cn(
-                "h-2 mb-1 bg-muted-foreground/10",
-                isActive && "bg-secondary/30"
-              )}
-              value={progressValue}
-              indicatorClassname={cn(
-                "bg-secondary-foreground",
-                isActive && "bg-primary-foreground"
-              )}
-            />
             <p
               className={cn(
                 "text-xs",
@@ -107,9 +91,33 @@ export function Activity({
                 ? progressValue + "%" + " today"
                 : "No tracked today"}
             </p>
+            <Progress
+              className={cn(
+                "h-0.5 bg-transparent absolute rounded-none bottom-0 left-0 right-0 w-full"
+              )}
+              value={50}
+              indicatorClassname={cn(
+                "bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500"
+              )}
+            />
           </>
         )}
       </div>
     </button>
   );
 }
+
+//        <div className="text-xs">
+//          {first3Records?.map((record) => {
+//            if (record.id === "untracked" || record.end_date == null)
+//              return null;
+//
+//            return (
+//              <p>
+//                {format(new Date(record.created_at as string), "hh:mm aa")} -{" "}
+//                {format(new Date(record.end_date as string), "hh:mm aa")}
+//              </p>
+//            );
+//          })}
+//        </div>
+//

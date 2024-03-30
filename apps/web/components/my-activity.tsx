@@ -29,43 +29,45 @@ export const MyActivity = ({ userId }: Props) => {
   };
 
   return (
-    <>
-      <div className="w-full flex justify-between items-center">
+    <Card>
+      <CardHeader className="w-full flex flex-row justify-between items-center">
         <CardTitle>My activity</CardTitle>
         <SelectDate selectedDate={selectedDate} onSelectDate={onDateChange} />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {data && !error && (
-          <>
-            <div className="w-full flex items-center justify-center">
-              {data.records && data.records.length > 0 ? (
-                <ActivityChart
-                  data={data.records}
-                  selectedIndex={activeIndex}
-                  setSelectedIndex={setSelectedIndex}
-                />
-              ) : (
-                <div className="w-full h-52 flex items-center justify-center">
-                  <p>No activity tracked yet</p>
-                </div>
-              )}
-            </div>
-            <MostTrackedActivities
-              data={data.records}
-              setSelectedIndex={setSelectedIndex}
-              selectedIndex={activeIndex}
-              totalCount={data.totalCount}
-            />
-          </>
-        )}
-        {error && (
-          <Alert variant="destructive" className="mt-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>Something went wrong</AlertDescription>
-          </Alert>
-        )}
-      </div>
-    </>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {data && !error && (
+            <>
+              <div className="w-full flex items-center justify-center">
+                {data.records && data.records.length > 0 ? (
+                  <ActivityChart
+                    data={data.records}
+                    selectedIndex={activeIndex}
+                    setSelectedIndex={setSelectedIndex}
+                  />
+                ) : (
+                  <div className="w-full h-52 flex items-center justify-center">
+                    <p>No activity tracked yet</p>
+                  </div>
+                )}
+              </div>
+              <MostTrackedActivities
+                data={data.records}
+                setSelectedIndex={setSelectedIndex}
+                selectedIndex={activeIndex}
+                totalCount={data.totalCount}
+              />
+            </>
+          )}
+          {error && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>Something went wrong</AlertDescription>
+            </Alert>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };

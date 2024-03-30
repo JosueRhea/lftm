@@ -26,7 +26,7 @@ export default async function Home() {
 
   return (
     <div className="mt-4 pb-52">
-      <div className="w-full border rounded-lg grid grid-cols-[1fr] md:grid-cols-[0.75fr_1.25fr] p-0.5">
+      <div className="w-full border rounded-lg shadow-sm grid grid-cols-[1fr] md:grid-cols-[0.75fr_1.25fr] p-0.5">
         <TotalOverview userId={userId} />
         <div className="w-full h-full p-2">
           <TimeSpend userId={userId} />

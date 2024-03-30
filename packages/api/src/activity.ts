@@ -256,7 +256,10 @@ export async function get24hRecords(
   const findedRecords: RecordWithCounterProps[] = [];
 
   if (data == null || data.length <= 0)
-    return { records: findedRecords, totalCount: 0 };
+    return {
+      records: findedRecords,
+      totalCount: 0,
+    };
 
   let totalTrackedHours = 0;
   data.forEach((record) => {
