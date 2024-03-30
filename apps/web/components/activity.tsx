@@ -95,7 +95,7 @@ export function Activity({
               className={cn(
                 "h-0.5 bg-transparent absolute rounded-none bottom-0 left-0 right-0 w-full"
               )}
-              value={50}
+              value={progressValue}
               indicatorClassname={cn(
                 "bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500"
               )}
