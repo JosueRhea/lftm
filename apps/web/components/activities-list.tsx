@@ -25,7 +25,7 @@ export function ActivitiesList({ userId, currentActivityId }: Props) {
   const activities = data ?? [];
 
   return (
-    <ul className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
+    <ul className="w-full grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 mt-4 gap-4">
       {error == null &&
         activities.map((activity, index) => {
           const isActive =
