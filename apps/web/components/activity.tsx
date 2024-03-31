@@ -86,11 +86,11 @@ export function Activity({
                 </div>
               );
             })}
-            {countOfMoreRecords && countOfMoreRecords > 0 && (
+            {countOfMoreRecords && countOfMoreRecords > 0 ? (
               <p className="text-xs text-muted-foreground">
                 +{countOfMoreRecords} more
               </p>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
