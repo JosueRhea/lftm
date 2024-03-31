@@ -12,5 +12,6 @@ export {
   getRecords,
   getTopActivities,
   getAverageActivity,
+  get24hRecordsByActivityId,
 } from "./activity";
 export { getUserData, getActivities } from "./user";

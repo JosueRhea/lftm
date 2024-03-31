@@ -336,6 +336,42 @@ export async function get24hRecords(
   return { records: findedRecords, totalCount: totalTrackedHours };
 }
 
+export async function get24hRecordsByActivityId(
+  client: SupabaseClient<Database>,
+  {
+    userId,
+    date,
+    activityId,
+  }: { userId: string; date: Date; activityId: string }
+) {
+  date.setHours(0, 0, 0, 0);
+  const dayStart = new Date(date.getTime());
+  date.setHours(23, 59, 59, 999);
+  const dayEnd = new Date(date.getTime());
+
+  const isoDayStart = dayStart.toISOString();
+  const isoDayEnd = dayEnd.toISOString();
+
+  const res = await client
+    .from("record")
+    .select(`*, activity(*)`)
+    .eq("user_id", userId)
+    .eq("activity_id", activityId)
+    .or(
+      `and(created_at.gte.${isoDayStart},created_at.lte.${isoDayEnd}),and(end_date.gte.${isoDayStart},end_date.lte.${isoDayEnd}),and(created_at.lte.${isoDayStart},end_date.gte.${isoDayEnd})`
+    )
+    .order("created_at", { ascending: true })
+    .throwOnError();
+
+  const data = (res.data as RecordWithRelationsProps[]) ?? [];
+
+  const total = data.reduce((acc, record) => {
+    return acc + record.elapsed_ms;
+  }, 0);
+
+  return { data, total };
+}
+
 export async function getRecords(
   client: SupabaseClient<Database>,
   {
